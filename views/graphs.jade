@@ -1,0 +1,14 @@
+extends layout
+block content
+    h1 graphs
+    script(src='/javascripts/CustomToolTip.js')
+    script(src='/javascripts/animated_bubble_chart_custom.js')
+    #pagination_div
+        ul.pagination
+            li.active
+                a(onclick="return false", id="centered_button") lump together
+            li
+                a(onclick="return false", id="show_media") seperate by media
+
+    svg#chart_bubble_test
+

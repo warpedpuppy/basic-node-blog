@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1 essays
+  h2= count
+
+  a(href='/essays?start_number=#{last_id}', class='btn btn-default') next record
+
+  -if(show_one === undefined)
+    -for(var i = 0; i < essays.length; i++)
+      a(href='/essays/#{essays[i].id}')
+        p=  "ID = "+essays[i].id+"   "+essays[i].createdAt+"   "+essays[i].title
+  -else
+    h1= essay.title
+    pre= essay.essay
+
+

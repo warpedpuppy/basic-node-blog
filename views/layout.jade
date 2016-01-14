@@ -1,0 +1,47 @@
+doctype html
+html
+  head
+    title= title
+
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="//d3js.org/d3.v3.min.js")
+    script(src='/javascripts/jquery.min.js')
+    script(src='/javascripts/custom.js')
+
+
+  body
+    nav.navbar.navbar-default.navbar-static-top
+      .container-fluid
+          .navbar-header
+              button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+                  span(class="sr-only") Toggle navigation
+                  span(class="icon-bar")
+                  span(class="icon-bar")
+                  span(class="icon-bar")
+
+              a.navbar-brand ashlander
+
+          .collapse.navbar-collapse#bs-example-navbar-collapse-1
+              ul.nav.navbar-nav.navbar-right
+                  li
+                      a(href='/') home
+
+                  li
+                      a(href='/essays') essays
+                  li
+                      a(href='/admin') admin
+                  li.dropdown
+                    a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup='true', aria-expanded="false") graphs
+                        span.caret
+                    ul.dropdown-menu
+                        li
+                            a(href='/graphs') bubble chart
+                        li
+                            a(href='/media_bar_chart') bar chart
+    block content
+
+
+  footer
+      script(src='/bootstrap/js/bootstrap.min.js')
+                                    
