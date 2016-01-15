@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 
   var start_number = (req.query.start_number === undefined)?0:req.query.start_number;
   var start_string = (req.query.start_number === undefined)?"id DESC":"id";
+    var page_number = (req.query.p === undefined)?0:req.query.p;
 
   models.essays.findAndCountAll({
 
@@ -32,10 +33,11 @@ router.get('/', function(req, res, next) {
 
     res.render("essays", {
 
-      essays:essays,
-      start_number:start_number,
-      last_id:last_id,
-        count:count
+        essays:essays,
+        start_number:start_number,
+        last_id:last_id,
+        count:count,
+        page_number:page_number
     });
   });
 });

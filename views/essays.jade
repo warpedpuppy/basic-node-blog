@@ -2,9 +2,32 @@ extends layout
 
 block content
   h1 essays
-  h2= count
 
-  a(href='/essays?start_number=#{last_id}', class='btn btn-default') next record
+  .text-center
+    ul.pagination
+      - var klass2 = (page_number === 0)?'disabled':'';
+      li(class=klass2)
+        -var prev_page = start_number+9;
+        -var new_page2 = parseInt(page_number)-10;
+
+        a(href="/essays/?start_number=#{prev_page}&p=#{new_page2}", aria-label="Previous")
+          span &laquo;
+
+
+      -for(var i = 0; i < count; i++)
+        -if(i % 10 == 0)
+          -var klass = (i == page_number)?'active':'';
+          -console.log(i+" versus "+page_number);
+            li(class=klass)
+              -var new_start_number = count - (10+i);
+              a(href="/essays/?start_number=#{new_start_number}&p="+i) #{i+1} - #{i+10}
+      li
+        -var next_page = start_number-11;
+        -var new_page = parseInt(page_number)+10;
+        a(href="/essays/?start_number=#{next_page}&p=#{new_page}", aria-label="Previous")
+          span &raquo;
+
+
 
   -if(show_one === undefined)
     -for(var i = 0; i < essays.length; i++)
