@@ -4,10 +4,9 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 
 
-var max_records = 40;
-var records_per_page = 10;
+var records_per_page = 60;
+var records_per_li = 5;
 
-//this will result in 8 lis per page -- (40/5)
 
 
 
@@ -23,7 +22,7 @@ router.get('/', function(req, res, next) {
 
     order:start_string,
     offset:start_number,
-    limit:10
+    limit:records_per_li
 
   }).then(function(results) {
 
@@ -46,8 +45,8 @@ router.get('/', function(req, res, next) {
         last_id:last_id,
         total_records:total_records,
         page_number:page_number,
-        max_records:max_records,
         records_per_page:records_per_page,
+        records_per_li:records_per_li,
         page_counter:page_counter
     });
   });

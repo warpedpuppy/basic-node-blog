@@ -3,13 +3,13 @@ extends layout
 block content
   h1 essays
 
-  -max_records = parseInt(max_records);
+  -records_per_page = parseInt(records_per_page);
   -page_counter = parseInt(page_counter);
   -start_number = parseInt(start_number);
   -page_number = parseInt(page_number);
-  -records_per_page = parseInt(records_per_page);
-  -limit_counter = 0;
-
+  -records_per_li = parseInt(records_per_li);
+  -var max_value = page_counter+records_per_page;
+  -var new_start_number, new_page_number, new_page_counter;
 
   -function between(x, min, max) {return x >= min && x <= max;};
 
@@ -21,37 +21,33 @@ block content
       ul.pagination
 
 
-        -console.log("page number = "+page_number);
-        - var klass2 = (page_number < max_records)?'disabled':'';
-        li(class=klass2)
 
-          -var prev_page = start_number+(records_per_page-1);
-          -var records_per_page_back = page_number - max_records;
-          -//console.log("records_per_page_back = "+page_number +" - "+max_records);
-          -var new_page_counter = page_counter -1 ;
+        - var li_class = (page_number < records_per_page)?'disabled':'';
+        li(class=li_class)
 
-          -var link_string = "/essays/?start_number="+prev_page+"&p="+records_per_page_back+"&c="+new_page_counter;
-          -if(page_number < max_records)link_string = "";
+          - new_start_number = start_number+(records_per_li-1);
+          - new_page_number = page_number - records_per_page;
+          - new_page_counter = page_counter -records_per_page ;
+
+          -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
+          -if(page_number < records_per_page)link_string = "";
 
           a(href="#{link_string}", aria-label="Previous")
             span &laquo;
 
 
 
-        -  klass2 = (page_number == 1)?'disabled':'';
-        li(class=klass2)
-          -var prev_page = start_number+(records_per_page-1);
-          -var new_page2 = page_number-records_per_page;
+        -  li_class = (page_number == 1)?'disabled':'';
+        li(class=li_class)
+
+          - new_start_number = start_number+(records_per_li-1);
+          - new_page_number = page_number-records_per_li;
 
           -var prev_page_check = page_number;
+          -var beg_of_row = between(prev_page_check, page_counter, (page_counter + records_per_li));
+          - new_page_counter = (beg_of_row)?(page_counter-records_per_page):page_counter;
 
-          -var beg_of_row = between(prev_page_check, page_counter, (page_counter + records_per_page));
-          -//console.log("4 is "+prev_page_check+" between "+page_counter+" and "+(page_counter + records_per_page));
-
-          -var new_page_counter = (beg_of_row)?(page_counter-max_records):page_counter;
-          -//console.log(beg_of_row+" "+new_page_counter);
-
-          -var link_string = "/essays/?start_number="+prev_page+"&p="+new_page2+"&c="+new_page_counter;
+          -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
           -if(page_number == 1)link_string = "";
 
           a(href='#{link_string}', aria-label="Previous")
@@ -60,12 +56,6 @@ block content
 
 
 
-        -var total_tabs = ((page_counter+max_records) - page_counter)/records_per_page;
-        -//console.log("total tabs = "+total_tabs);
-        -var max_value = page_counter+max_records;
-
-        -//console.log("is "+page_number+" within "+page_counter+" through "+max_value);
-
 
 
 
@@ -73,42 +63,34 @@ block content
 
           -if(i > total_records)break;
 
-          -//console.log("max_value = "+max_value);
 
-          -var final_number = ((i+records_per_page) > total_records)?total_records:(i+records_per_page-1);
+          -var final_number = ((i+records_per_li) > total_records)?total_records:(i+records_per_li-1);
           -if(final_number > max_value)final_number = max_value;
-          -//console.log("1  is "+page_number+" between "+i+ " and "+final_number+"?")
 
           -var klass = (between(page_number, i, (final_number-1)))?'active':'';
 
-          -if((i-1) % records_per_page == 0)
+          -if((i-1) % records_per_li == 0)
 
               li(class=klass)
-                -var new_start_number = total_records - (records_per_page+i);
-                -//var final_number = ((i+records_per_page) > total_records)?total_records:(i+records_per_page)-1;
-                a(href="/essays/?start_number=#{new_start_number}&p="+i) numbers #{i} - #{final_number}
+                -var new_start_number = total_records - (records_per_li+i)+1;
+                a(href="/essays/?start_number=#{new_start_number}&p="+i+"&c="+page_counter)  #{i} - #{final_number}
 
 
 
 
 
 
-        -var shut_off_number = page_number+records_per_page;
-        -  klass2 = (shut_off_number > total_records)?'disabled':'';
-        li(class=klass2)
-          -var next_page = start_number-(records_per_page+1);
-          -var new_page = page_number+records_per_page;
-          -//console.log(start_number);
-          -//console.log(page_number);
-          -//console.log(page_counter);
-          -var next_page_check = records_per_page+page_number;
-          -//var last_record_on_page = final_number - 8;
-          -console.log("is "+next_page_check+" between "+page_counter+ " and "+final_number+"?")
+        -var shut_off_number = page_number+records_per_li;
+        -  li_class = (shut_off_number > total_records)?'disabled':'';
+        li(class=li_class)
+          -if(start_number == total_records)start_number -= (records_per_li-1);
+          - new_start_number = start_number-(records_per_li+1);
+          - new_page_number = page_number+records_per_li;
+          -var next_page_check = records_per_li+page_number;
           -var end_of_row = between(next_page_check, page_counter, final_number);
-          -//console.log(end_of_row);
-          -var new_page_counter = (end_of_row)?page_counter:(page_counter+max_records);
+          - new_page_counter = (end_of_row)?page_counter:(page_counter+records_per_page);
 
-          -var link_string = "/essays/?start_number="+next_page+"&p="+new_page+"&c="+new_page_counter;
+          -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
           -if(shut_off_number > total_records)link_string = "";
 
           a(href='#{link_string}', aria-label="Previous")
@@ -118,18 +100,16 @@ block content
 
 
 
-        -var shut_off_number = page_number+max_records;
-        -  klass2 = (shut_off_number > total_records)?'disabled':'';
-        li(class=klass2)
-          -var new_page_number = page_number+max_records;
-          -//console.log(page_number +"   "+max_records);
-          -var new_page_counter = page_counter +max_records;
+        -var shut_off_number = page_number+records_per_page;
+        -  li_class = (shut_off_number > total_records)?'disabled':'';
+        li(class=li_class)
 
-          -var link_string = "/essays/?start_number="+next_page+"&p="+new_page_number+"&c="+new_page_counter;
-          -//console.log("link string = "+link_string);
+          - new_start_number = start_number - (records_per_page)-1;
+          - new_page_number = page_number+records_per_page;
+          - new_page_counter = page_counter +records_per_page;
+
+          -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
           -if(new_page_counter > total_records)link_string = "#";
-
-          -//console.log("link string = "+link_string);
 
           a(href='#{link_string}', aria-label="Previous")
             span &raquo;
