@@ -4,12 +4,20 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 
 
+var max_records = 40;
+var records_per_page = 10;
+
+//this will result in 8 lis per page -- (40/5)
+
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 
-  var start_number = (req.query.start_number === undefined)?0:req.query.start_number;
-  var start_string = (req.query.start_number === undefined)?"id DESC":"id";
-    var page_number = (req.query.p === undefined)?0:req.query.p;
+    var page_counter = (req.query.c === undefined)?0:req.query.c;
+    var start_number = (req.query.start_number === undefined)?0:req.query.start_number;
+    var start_string = (req.query.start_number === undefined)?"id DESC":"id";
+    var page_number = (req.query.p === undefined)?1:req.query.p;//li active
 
   models.essays.findAndCountAll({
 
@@ -19,7 +27,7 @@ router.get('/', function(req, res, next) {
 
   }).then(function(results) {
 
-      var count = results.count;
+      var total_records = results.count;
       var essays = results.rows;
 
     start_number = essays[0].id;
@@ -31,13 +39,16 @@ router.get('/', function(req, res, next) {
     else
       last_id = start_number - 19;
 
-    res.render("essays", {
+     res.render("essays", {
 
         essays:essays,
         start_number:start_number,
         last_id:last_id,
-        count:count,
-        page_number:page_number
+        total_records:total_records,
+        page_number:page_number,
+        max_records:max_records,
+        records_per_page:records_per_page,
+        page_counter:page_counter
     });
   });
 });

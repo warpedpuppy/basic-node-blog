@@ -35,8 +35,8 @@
                     x: this.width / 2,
                     y: this.height / 2
                 },
-                "movies": {
-                    x: 2 * this.width / 3,
+                "movie": {
+                    x: (2 * this.width / 3)+100,
                     y: this.height / 2
                 }
             };

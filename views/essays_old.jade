@@ -1,0 +1,89 @@
+extends layout
+
+block content
+  h1 essays
+
+  -max_records = parseInt(max_records);
+  -page_counter = parseInt(page_counter);
+  -start_number = parseInt(start_number);
+  -page_number = parseInt(page_number);
+  -records_per_page = parseInt(records_per_page);
+  -limit_counter = 0;
+
+
+  -function between(x, min, max) {return x >= min && x <= max;};
+
+
+  -if(show_one === undefined)
+    .text-center
+      h3 there are #{total_records} essays
+    .text-center
+      ul.pagination
+
+        - var klass2 = (page_number < max_records)?'disabled':'';
+        li(class=klass2)
+
+          -var prev_page = start_number+(records_per_page-1);
+          -var new_page_counter = page_number-max_records;
+
+          a(href="/essays/?start_number=#{prev_page}&p=#{new_page2}&c=#{new_page_counter}", aria-label="Previous")
+            span &laquo;
+
+
+        -  klass2 = (page_number === 0)?'disabled':'';
+        li(class=klass2)
+          -var prev_page = start_number+(records_per_page-1);
+          -var new_page2 = page_number-records_per_page;
+
+          a(href="/essays/?start_number=#{prev_page}&p=#{new_page2}", aria-label="Previous")
+            span &lsaquo;
+
+
+
+        -for(var i = page_counter; i < (page_counter+max_records); i++)
+            -if(i > total_records)break;
+
+              -var klass = (between(page_number, i, (i+records_per_page)))?'active':'';
+
+             -if(i % records_per_page == 0)
+                li(class=klass)
+                  -var new_start_number = total_records - (records_per_page+i);
+                  -var final_number = ((i+records_per_page) > total_records)?total_records:(i+records_per_page);
+                  a(href="/essays/?start_number=#{new_start_number}&p="+i) #{i+1} - #{final_number}
+
+
+
+
+        li
+          -var next_page = start_number-(records_per_page+1);
+          -var new_page = page_number+records_per_page;
+          -console.log(start_number);
+          -console.log(page_number);
+          -console.log(page_counter);
+          -var end_of_row = between(page_number, i, (i+records_per_page));
+          -var new_page_counter = (end_of_row)?(page_counter+max_records):0;
+          a(href="/essays/?start_number=#{next_page}&p=#{new_page}&c=#{new_page_counter}", aria-label="Previous")
+            span &rsaquo;
+
+
+        -  klass2 = ((page_number+records_per_page) > max_records)?'disabled':'';
+        li(class=klass2)
+          -var new_page_counter = page_counter+max_records;
+          -var new_page = parseInt(page_number)+records_per_page;
+          a(href="/essays/?start_number=#{next_page}&p=#{new_page_counter}&c=#{new_page_counter}", aria-label="Previous")
+            span &raquo;
+
+
+
+    .essay_list
+      -for(var i = 0; i < essays.length; i++)
+        a(href='/essays/#{essays[i].id}')
+          p=  "ID = "+essays[i].id+"   "+essays[i].createdAt+"   "+essays[i].title
+
+  -else
+
+    a(href='/essays') back to essays
+    h1= essay.title
+    pre= essay.essay
+
+
