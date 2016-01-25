@@ -53,6 +53,24 @@ router.get('/', function(req, res, next) {
 });
 
 
+/* GET users listing. */
+router.post('/comment', function(req, res, next) {
+
+    var essay_id = req.body.essay_id;
+    var name = req.body.name;
+    var comment = req.body.comment;
+
+
+    models.Comments.create({
+        essay_id: essay_id,
+        name: name,
+        comment:comment
+    }).then(function(){
+
+        res.redirect("/essays/"+essay_id);
+
+    })
+});
 
 
 
@@ -66,10 +84,15 @@ router.get('/:id', function(req, res, next) {
 
     var essay = essays[0];
 
-    res.render("essays", {
-      essay:essay,
-      show_one:show_one
+    models.Comments.findAll({where:{essay_id:id}, order:'id DESC'}).then(function(comments) {
+
+        res.render("essays", {
+        comments:comments,
+        essay:essay,
+        show_one:show_one
+        });
     });
+
   });
 });
 

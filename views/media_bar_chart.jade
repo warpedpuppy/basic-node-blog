@@ -29,20 +29,37 @@ block content
             d3.json("/graphs/grab_json", function (error, data) {
                 if (error) throw error;
 
+               // data.fill_color = d3.scale.ordinal().domain(["low", "medium", "high"]).range(["#d84b2a", "#beccae", "#7aa25c"]);
+
                 //loop through data and show how many
                 var count = {};
+
                 for(var obj in data){
-                    if(count[data[obj].genre] === undefined)
-                        count[data[obj].genre] = 1;
+                    if(count[data[obj].genre] === undefined && data[obj].genre !== undefined){
+                        count[data[obj].genre] = {};
+                        count[data[obj].genre].genre = data[obj].genre
+                        count[data[obj].genre].frequency = 1;
+
+                        //count[data[obj].genre].genre = data[obj].genre
+                    }
                     else
-                        count[data[obj].genre]++;
+                        count[data[obj].genre].frequency++;
                 }
+
+
                 for(var obj in data){
                     for(var key in count){
-                        if(data[obj].genre == key)data[obj].frequency = count[key];
+                        if(data[obj].genre == key)data[obj].frequency = count[key].frequency;
                     }
 
                 }
+
+                var graph_array = [];
+
+                for(var key in count){
+                    graph_array.push(count[key]);
+                }
+
 
                 x.domain(data.map(function (d) {
                     return d.genre;
@@ -50,6 +67,9 @@ block content
                 y.domain([0, d3.max(data, function (d) {
                     return d.frequency;
                 })]);
+
+                data = graph_array;
+
                 svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
@@ -73,10 +93,11 @@ block content
                         .data(data)
                         .enter().append("rect")
                         .attr("class", "bar")
+                        .attr("fill", "red")
                         .attr("x", function (d) {
-                            return x(d.genre);
+                            return x(d.genre)+70;
                         })
-                        .attr("width", x.rangeBand())
+                        .attr("width", x.rangeBand()/2)
                         .attr("y", function (d) {
                             return y(d.frequency);
                         })
