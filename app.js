@@ -10,7 +10,7 @@ var graphs = require('./routes/graphs');
 var media_bar_chart = require('./routes/media_bar_chart');
 var admin = require('./routes/admin');
 var essays = require('./routes/essays');
-
+var photos = require('./routes/photos');
 
 var app = express();
 
@@ -31,6 +31,7 @@ app.use('/graphs', graphs);
 app.use('/media_bar_chart', media_bar_chart);
 app.use('/admin', admin);
 app.use('/essays', essays);
+app.use('/photos', photos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -18,7 +18,7 @@ block content
     .text-center
       h3 there are #{total_records} essays
     .text-center
-      ul.pagination
+      ul.pagination.pagination-sm
 
 
 
@@ -127,4 +127,18 @@ block content
     h1= essay.title
     pre= essay.essay
 
-
+    h3 warning: I only post the comments I like, so be nice, or be thrown out
+    form(action='/essays/comment', method='post', id='comment_form', class='form-horizontal')
+      .form-group
+        label.col-sm-2.control-label name:
+        .col-sm-10
+          input(type='text', class='form-control', name='title', id='essay_title_text', placeholder='type name here')/
+          input(type='text', class='form-control', name='test', id='test', style='display:none;')/
+      .form-group
+        label.col-sm-2.control-label comment:
+        .col-sm-10
+          textarea(name='essay', class="form-control", rows="3", id="essay_text")
+      .form-group
+        .col-sm-12.text-right
+          button(onclick="return false;",class='btn btn-default', id="enter_essay_button") submit comment
+          //input(type='submit',class='btn btn-default', value='enter essay')/
