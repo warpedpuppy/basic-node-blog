@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Media = sequelize.define("essays", {
-    essay_title: DataTypes.TEXT,
+    title: DataTypes.TEXT,
     essay:DataTypes.TEXT
 
 

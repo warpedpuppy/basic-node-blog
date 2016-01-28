@@ -108,12 +108,18 @@ router.get('/delete_record/:d', function(req, res) {
 
 router.post('/add_essay', function (req, res) {
 
+  var title = req.body.title;
+  var essay = req.body.essay;
+
+  console.log(title);
+
+
   models.essays.create({
-    title: title+essay_counter.toString(),
+    title: title,
     essay: essay
   }).then(function(){
 
-    res.redirect("/admin");
+    //res.redirect("/admin");
 
   })
 });
