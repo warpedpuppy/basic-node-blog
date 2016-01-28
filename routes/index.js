@@ -3,13 +3,10 @@ var models  = require('../models');
 var bodyParser = require('body-parser');
 var router = express.Router();
 
-/* GET home page. */
-
 
 
 router.get('/', function(req, res) {
 
-//models.essays.drop();
 
     models.essays.findAll({
        order:"id DESC",
@@ -17,12 +14,15 @@ router.get('/', function(req, res) {
     }).then(function(essays) {
 
         var essay = essays[0];
-        res.render("index", {
-            essay:essay
-        });
+        models.Comments.findAll({where:{essay_id:essay.id}}).then(function(comments) {
+            res.render("index", {
+                essay:essay,
+                comments:comments
+            });
+
     });
 
-
+});
 
 
 });

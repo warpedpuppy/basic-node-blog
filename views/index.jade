@@ -8,3 +8,38 @@ block content
           h2.essay-title= essay.title
           h3.essay-date= essay.updatedAt
           pre.essay-format= essay.essay
+
+
+    form(action='/essays/comment', method='post', id='comment_form', class='form-horizontal')
+        .form-group
+            .col-sm-12.text-center
+                h4.add-comment-text add comment
+                div.post-warning warning: I only post the comments I like, so be nice!
+        .form-group
+            label.col-sm-2.control-label name:
+            .col-sm-10
+                input(type='text', class='form-control', name='name', id='comment_name_id', placeholder='type name here')/
+                input(type='text', class='form-control', name='test', id='test', style='display:none;')/
+                input(type='hidden', class='form-control', name='essay_id', value='#{essay.id}')/
+                input(type='hidden', class='form-control', name='essay_title', value='#{essay.title}')/
+        .form-group
+            label.col-sm-2.control-label comment:
+            .col-sm-10
+                textarea(name='comment', class="form-control", rows="3", id="comment_text_id")
+        .form-group
+            .col-sm-12.text-right
+                button(onclick="return false;",class='btn btn-default', id="enter_comment_button") submit comment
+                //input(type='submit',class='btn btn-default', value='enter essay')/
+
+        .col-sm-12.text-center.alert
+
+    .row
+
+        -for(var i = 0; i < comments.length; i++)
+            if(comments[i].approved === true)
+                .comment-div
+                    .comment-author name: #{comments[i].name}
+                    .comment-date date: #{comments[i].createdAt}
+                    pre.comment-text= comments[i].comment
+
+    .bottom-buffer
