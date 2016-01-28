@@ -4,16 +4,18 @@ block content
 
   .container
     .row
-      h1 login
+
 
       form(action='/admin_login/login', method='post',  class='form-horizontal enter-media-form', id="admin_login_form")
+        .form-group
+          .col-sm-12.text-center
+              h4 admin section login
         .form-group
           label.col-sm-2.control-label password:
           .col-sm-10
             input(type='password', class='form-control', name='password', id='password', placeholder='password')/
         .form-group
           .col-sm-12.text-right
-            //button(onclick="return false;",class='btn btn-default', id="enter_essay_button") enter media button
             input(type='submit',class='btn btn-default')/
 
 

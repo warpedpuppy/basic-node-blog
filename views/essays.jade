@@ -17,8 +17,7 @@ block content
 
 
       -if(show_one === undefined)
-        .text-center
-          h3 there are #{total_records} essays
+
         .text-center
           ul.pagination.pagination-sm
 
@@ -116,41 +115,49 @@ block content
               a(href='#{link_string}', aria-label="Previous")
                 span &raquo;
 
+        .text-center
+          p.total-text there are #{total_records} essays
 
 
-        .essay_list
+
+        .text-center
+          ol.list-group
           -for(var i = 0; i < essays.length; i++)
-            a(href='/essays/#{essays[i].id}')
-              div.text-center=  essays[i].title+" created on "+essays[i].createdAt
+              li.list-group-item
+                a(href='/essays/#{essays[i].id}')= essays[i].title+" created on "+essays[i].createdAt
 
       -else
 
-        a(href='/essays')
-          button.btn.btn-success back to essays
+        .text-right
+          a(href='/essays')
+            button.btn.btn-success back to essays
 
-        h1= essay.title
-        pre= essay.essay
+        h1.essay-title= essay.title
+        pre.essay-format= essay.essay
 
-        div.text-center warning: I only post the comments I like, so be nice, or be un-posted
+        div.post-warning warning: I only post the comments I like, so be nice!
 
         form(action='/essays/comment', method='post', id='comment_form', class='form-horizontal')
           .form-group
+            .col-sm-12.text-center
+              h4 add comment
+          .form-group
             label.col-sm-2.control-label name:
             .col-sm-10
-              input(type='text', class='form-control', name='name', id='comment_name_id', placeholder='type name here', value='test name')/
+              input(type='text', class='form-control', name='name', id='comment_name_id', placeholder='type name here')/
               input(type='text', class='form-control', name='test', id='test', style='display:none;')/
               input(type='hidden', class='form-control', name='essay_id', value='#{essay.id}')/
               input(type='hidden', class='form-control', name='essay_title', value='#{essay.title}')/
           .form-group
             label.col-sm-2.control-label comment:
             .col-sm-10
-              textarea(name='comment', class="form-control", rows="3", id="comment_text_id") asld alskal las dlaks laks laksd l
+              textarea(name='comment', class="form-control", rows="3", id="comment_text_id")
           .form-group
             .col-sm-12.text-right
               button(onclick="return false;",class='btn btn-default', id="enter_comment_button") submit comment
               //input(type='submit',class='btn btn-default', value='enter essay')/
-          .form-group
-            .col-sm-12.text-center.alert
+
+        .col-sm-12.text-center.alert
 
 
 

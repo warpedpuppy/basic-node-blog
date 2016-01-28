@@ -5,6 +5,6 @@ block content
   .container
     .row
       -if(essay !== undefined)
-          h2= essay.title
-          h3= essay.updatedAt
-          pre= essay.essay
+          h2.essay-title= essay.title
+          h3.essay-date= essay.updatedAt
+          pre.essay-format= essay.essay
