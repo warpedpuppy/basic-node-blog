@@ -14,7 +14,7 @@ $(function(){
             $("#add_media_form").submit();
         }
         else{
-            $(".alert").text("enter something")
+            $(".alert").text("all fields required!")
         }
     });
 
@@ -30,7 +30,7 @@ $(function(){
             $("#comment_form").submit();
         }
         else{
-            $(".alert").text("enter something")
+            $(".alert").text("all fields required!")
         }
     });
 
@@ -46,7 +46,7 @@ $(function(){
             $("#enter_essay_form").submit();
         }
         else{
-            $(".alert").text("enter something")
+            $(".alert").text("all fields required!")
         }
     });
 
