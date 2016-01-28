@@ -7,20 +7,31 @@ var router = express.Router();
 
 router.get('/', function(req, res) {
 
+    //models.essays.drop();
+    //models.essays.destroy({truncate:true});
 
     models.essays.findAll({
        order:"id DESC",
         limit:1
     }).then(function(essays) {
 
-        var essay = essays[0];
-        models.Comments.findAll({where:{essay_id:essay.id}}).then(function(comments) {
-            res.render("index", {
-                essay:essay,
-                comments:comments
-            });
+        if(essays.length >0){
+            var essay = essays[0];
 
-    });
+            console.log(essay.title)
+            models.Comments.findAll({where:{essay_id:essay.id}}).then(function(comments) {
+                res.render("index", {
+                    essay:essay,
+                    comments:comments
+                });
+            });
+        }
+        else{
+                res.render("index");
+        }
+
+
+
 
 });
 

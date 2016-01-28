@@ -21,29 +21,22 @@ router.get('/', function(req, res, next) {
 
   models.essays.findAndCountAll({
 
-    order:start_string,
+    order:"id",
     offset:start_number,
     limit:records_per_li
 
   }).then(function(results) {
 
-      var total_records = results.count;
-      var essays = results.rows;
+    var total_records = results.count;
+    var essays = results.rows;
 
-    start_number = essays[0].id;
-   if(start_string == "id")essays = essays.reverse();
-    var last_id;
-
-    if(start_string == "id")
-      last_id = start_number - 10;
-    else
-      last_id = start_number - 19;
+    start_number = (essays.length > 0)?essays[0].id:0;
+    essays = essays.reverse();
 
      res.render("essays", {
 
         essays:essays,
         start_number:start_number,
-        last_id:last_id,
         total_records:total_records,
         page_number:page_number,
         records_per_page:records_per_page,
