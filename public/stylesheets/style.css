@@ -23,18 +23,34 @@ display: block;
   font-style: italic;
   text-align: center;
 }
-.chart rect {
+
+
+
+
+
+
+
+
+.bar_chart {
+  width:1000px;
+  height:900px;
+
+}
+.bar_chart rect {
   fill: steelblue;
 }
 
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: middle;
-}
+
+
+
+
+
+
+
 
 .axis text {
   font: 10px sans-serif;
+
 }
 
 .axis path,

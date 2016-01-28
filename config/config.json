@@ -1,17 +1,19 @@
 
 {
-  "development1": {
-    "username": "ted",
-    "password": "sqlPassword",
-    "database": "test_db",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "development2": {
+
+  "development": {
+    "records_per_page": 40,
+    "records_per_li": 10,
+    "user_id": "asdf",
+    "admin_password":"asdf",
     "dialect": "sqlite",
     "storage": "./db.development.sqlite"
   },
   "test": {
+    "records_per_page": 40,
+    "records_per_li": 10,
+    "user_id": "asdf",
+    "admin_password":"asdf",
     "username": "root",
     "password": null,
     "database": "database_test",
@@ -19,6 +21,10 @@
     "dialect": "mysql"
   },
   "production": {
+    "records_per_page": 40,
+    "records_per_li": 10,
+    "user_id": "asdf",
+    "admin_password":"asdf",
     "username": "root",
     "password": null,
     "database": "database_production",

@@ -9,7 +9,7 @@ var router = express.Router();
 
 router.get('/', function(req, res) {
 
-
+//models.essays.drop();
 
     models.essays.findAll({
        order:"id DESC",

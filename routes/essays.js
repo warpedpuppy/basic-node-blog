@@ -2,10 +2,11 @@ var express = require('express');
 var models  = require('../models');
 var bodyParser = require('body-parser');
 var router = express.Router();
+var env = require('../models').env;
+var config    = require(__dirname + '/../config/config.json')[models.env];
 
-
-var records_per_page = 60;
-var records_per_li = 5;
+var records_per_page = config.records_per_page;
+var records_per_li = config.records_per_li;
 
 
 
@@ -59,12 +60,15 @@ router.post('/comment', function(req, res, next) {
     var essay_id = req.body.essay_id;
     var name = req.body.name;
     var comment = req.body.comment;
+    var essay_title = req.body.essay_title
 
 
     models.Comments.create({
         essay_id: essay_id,
         name: name,
-        comment:comment
+        comment:comment,
+        essay_title:essay_title,
+        approved: false
     }).then(function(){
 
         res.redirect("/essays/"+essay_id);
@@ -76,6 +80,7 @@ router.post('/comment', function(req, res, next) {
 
 /* GET users listing. */
 router.get('/:id', function(req, res, next) {
+
 
   var id = req.params.id;
 

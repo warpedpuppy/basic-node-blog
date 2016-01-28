@@ -1,5 +1,10 @@
 extends layout
 
 block content
-  h1 ashlander
-  h2= essay.title
+
+  .container
+    .row
+      -if(essay !== undefined)
+          h2= essay.title
+          h3= essay.updatedAt
+          pre= essay.essay

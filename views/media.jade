@@ -1,0 +1,56 @@
+extends layout
+
+
+block content
+
+  .container
+    .row
+      h1 media consumed
+
+
+      ul.nav.nav-tabs
+        li.active
+          a(href="#media", aria-controls='media', role='tab', data-toggle='tab') media consumed
+        li
+          a(href="#bar_chart", aria-controls='bar_chart', role='tab', data-toggle='tab') bar chart
+        li
+          a(href="#bubbles", aria-controls='bubbles', role='tab', data-toggle='tab') bubble chart
+
+
+      .tab-content
+        div(role='tabpanel', class='tab-pane active', id='media')
+          table.table.table-striped
+            thead
+              th title
+              th author
+              th genre
+            tbody
+
+
+
+              -for(var i = 0; i < media_object.length; i ++)
+                tr
+                  td= media_object[i].title
+                  td= media_object[i].author
+                  td= media_object[i].genre
+
+
+        div(role='tabpanel', class='tab-pane', id='bar_chart')
+            svg.bar_chart
+
+              script.
+
+
+
+
+        div(role='tabpanel', class='tab-pane', id='bubbles')
+          script(src='/javascripts/CustomToolTip.js')
+          script(src='/javascripts/d3_media_charts.js')
+          #pagination_div
+            ul.pagination
+              li.active
+                a(onclick="return false", id="centered_button") lump together
+              li
+                a(onclick="return false", id="show_media") seperate by media
+
+          svg#chart_bubble_test

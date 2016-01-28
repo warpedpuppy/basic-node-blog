@@ -18,6 +18,24 @@ $(function(){
         }
     });
 
+    $("#enter_comment_button").click(function(){
+
+
+
+        var name = $("#comment_name_id").val();
+        var comment = $("#comment_text_id").val();
+
+
+        if(name != "" && comment != "") {
+            $("#comment_form").submit();
+        }
+        else{
+            $(".alert").text("enter something")
+        }
+    });
+
+
+
     $("#enter_essay_button").click(function(){
 
 
