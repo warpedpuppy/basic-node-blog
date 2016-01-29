@@ -9,6 +9,7 @@ router.get('/', function(req, res) {
 
     //models.essays.drop();
     //models.essays.destroy({truncate:true});
+    //add_fake_essays();
 
     models.essays.findAll({
        order:"id DESC",

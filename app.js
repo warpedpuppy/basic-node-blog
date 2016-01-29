@@ -11,7 +11,7 @@ var essays = require('./routes/essays');
 var admin_login = require('./routes/admin_login');
 var about = require('./routes/about');
 var media = require('./routes/media');
-
+var edit_essay = require('./routes/edit_essay');
 var app = express();
 
 // view engine setup
@@ -32,6 +32,7 @@ app.use('/essays', essays);
 app.use('/admin_login', admin_login);
 app.use('/about', about);
 app.use('/media', media);
+app.use('/edit_essay', edit_essay);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
