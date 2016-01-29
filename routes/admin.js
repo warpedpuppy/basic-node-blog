@@ -26,21 +26,19 @@ router.get('/',checkAuth, function(req, res) {
 
 
   models.Media_table.findAll().then(function(media_object) {
-
-
-
-
     models.Comments.findAll({where:{approved:false}}).then(function(comments) {
+        models.essays.findAll({ attributes: ['id', 'title'], order:"id DESC" }).then(function(essays) {
 
+          res.render('admin', {
+            comments:comments,
+            media_object: media_object,
+            essays:essays
+          });
 
-        res.render('admin', {
-          comments:comments,
-          media_object: media_object
-        });
     });
   });
 
-
+  });
 });
 
 router.get('/approve_comment/:d', function(req, res) {
@@ -63,6 +61,56 @@ router.get('/approve_comment/:d', function(req, res) {
   })
 
 });
+
+router.get('/delete_essay/:d', function(req, res) {
+
+  var essay_to_delete = req.params.d;
+
+  models.essays.destroy({where:{id:essay_to_delete}}).then(function(essay){
+
+    res.redirect("/admin");
+
+  })
+
+
+});
+
+router.get('/edit_essay/:d', function(req, res) {
+
+  var essay_to_edit = req.params.d;
+
+  models.essays.findOne({where:{id:essay_to_edit}}).then(function(essay){
+
+    res.render("edit_essay",{
+      essay:essay
+    });
+
+  })
+
+
+});
+
+router.post('/submit_essay_edits/', function(req, res) {
+
+  var id = req.body.id;
+  var title = req.body.title;
+  var essay = req.body.essay;
+
+  models.essays.update({
+    title:title,
+    essay:essay
+  },
+  {
+    where:{id:id}
+  }).then(function(){
+        res.redirect("/admin");
+
+  })
+
+
+});
+
+
 
 router.get('/delete_comment/:d', function(req, res) {
 

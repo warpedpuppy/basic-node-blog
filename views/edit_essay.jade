@@ -1,0 +1,26 @@
+extends layout
+
+
+block content
+
+  .container
+    .row
+      h1 edit essay
+
+      form(action='/admin/submit_essay_edits', method='post',  class='form-horizontal enter-media-form', id="edit_essay_form")
+        .form-group
+          label.col-sm-2.control-label title:
+          .col-sm-10
+            input(type='text', class='form-control', name='title', id='essay_title_text', value='#{essay.title}')/
+            input(type='hidden', class='form-control', name='id', value='#{essay.id}')/
+        .form-group
+          label.col-sm-2.control-label essay:
+          .col-sm-10
+            textarea(name='essay', class="form-control", rows="30", id="essay_text")= essay.essay
+        .form-group
+          .col-sm-12.text-right
+            //button(onclick="return false;",class='btn btn-default', id="enter_essay_button") enter essay
+            input(type='submit', class='btn btn-default', value='submit edits')/
+
+
+

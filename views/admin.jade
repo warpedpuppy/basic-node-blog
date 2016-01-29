@@ -18,6 +18,8 @@ block content
           a(href="#comments", aria-controls='comments', role='tab', data-toggle='tab') comments awaiting approval
         li
           a(href="#media", aria-controls='media', role='tab', data-toggle='tab') manage media
+        li
+          a(href="#deleteEditEssay", aria-controls='deleteEditEssay', role='tab', data-toggle='tab') delete/edit essays
 
 
       .tab-content
@@ -121,8 +123,26 @@ block content
 
                     button(class='btn btn-danger delete-record', id='delete_#{media_object[i].id}', name='#{media_object[i].id}') delete this record
 
+        div(role='tabpanel', class='tab-pane', id='deleteEditEssay')
 
-
+          table.table.table-striped
+            thead
+              tr
+                th id
+                th title
+                th edit
+                th delete
+            tbody#table_body
+              -for(var i=0; i < essays.length; i++)
+                tr
+                  td= essays[i].id
+                  td= essays[i].title
+                  td
+                    a(href='admin/edit_essay/#{essays[i].id}')
+                      button.btn.btn-warning edit
+                  td
+                    a(href='admin/delete_essay/#{essays[i].id}')
+                      button.btn.btn-danger delete
 
 
 
