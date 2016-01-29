@@ -5,10 +5,11 @@ block content
 
   .container
     .row
-      h1 media consumed
+      h1.media-tabs media consumed 2016
+      p.media-tabs I'm trying to create more and consume less, so I thought I'd track my consumption in 2016.  Also a client asked me if I knew d3 and I didn't.  So the two charts, below, use it.
 
 
-      ul.nav.nav-tabs
+      ul.nav.nav-tabs.media-tabs
         li.active
           a(href="#media", aria-controls='media', role='tab', data-toggle='tab') media consumed
         li
@@ -17,7 +18,7 @@ block content
           a(href="#bubbles", aria-controls='bubbles', role='tab', data-toggle='tab') bubble chart
 
 
-      .tab-content
+      .tab-content.media-tabs
         div(role='tabpanel', class='tab-pane active', id='media')
           table.table.table-striped
             thead
