@@ -167,7 +167,7 @@ router.post('/add_essay', function (req, res) {
     essay: essay
   }).then(function(){
 
-    //res.redirect("/admin");
+    res.redirect("/admin");
 
   })
 });
