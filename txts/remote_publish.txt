@@ -1,0 +1,14 @@
+
+
+server live directory:  /var/www/vhosts/warpedpuppy.com/ashlander
+server repository:  /var/repo/ashlander.git
+
+
+
+post-receive:
+
+#!/bin/sh
+git --work-tree=/var/www/vhosts/warpedpuppy.com/ashlander --git-dir=/var/repo/ashlander.git checkout -f
+
+
+git remote add live ssh://warpedpuppy@ashlander.org/var/repo/ashlander.git
