@@ -2,147 +2,176 @@ extends layout
 
 block content
 
-  .container
-    .row
+  script(src="/javascripts/angularApp_Admin.js")
 
-      .text-right
-        a(href='/admin/logout')
-          button.btn.btn-danger log out
-
-      ul.nav.nav-tabs
-        li.active
-          a(href="#essay", aria-controls='essay', role='tab', data-toggle='tab') enter essay
-        li
-          a(href="#media", aria-controls='media', role='tab', data-toggle='tab') enter media
-        li
-          a(href="#comments", aria-controls='comments', role='tab', data-toggle='tab') comments awaiting approval
-        li
-          a(href="#media", aria-controls='media', role='tab', data-toggle='tab') manage media
-        li
-          a(href="#deleteEditEssay", aria-controls='deleteEditEssay', role='tab', data-toggle='tab') delete/edit essays
-
-
-      .tab-content
-
-        div(role='tabpanel', class='tab-pane active', id='essay')
-          h1 enter essay
+  div(ng-controller='MainCtrl')
+    .container
+      .row
+        .text-right
+          a(href='/admin/logout')
+            button.btn.btn-danger log out
+        ul.nav.nav-tabs
+          li.active
+            a(ng-click="showEnterEssay()", aria-controls='essay', role='tab', data-toggle='tab') enter essay
+          li
+            a(ng-click="showEnterMedia()", aria-controls='media', role='tab', data-toggle='tab') enter media
+          li
+            a(ng-click="showApproveComments()", aria-controls='comments', role='tab', data-toggle='tab') comments awaiting approval
+          li
+            a(ng-click="showManageMedia()", aria-controls='media', role='tab', data-toggle='tab') manage media
+          li
+            a(ng-click="showDeleteEssays()", aria-controls='deleteEditEssay', role='tab', data-toggle='tab') delete/edit essays
 
 
-          form(action='/admin/add_essay', method='post',  class='form-horizontal enter-media-form', id="enter_essay_form")
-            .form-group
-              label.col-sm-2.control-label title:
-              .col-sm-10
-                input(type='text', class='form-control', name='title', id='essay_title_text', placeholder='title')/
-            .form-group
-              label.col-sm-2.control-label essay:
-              .col-sm-10
-                textarea(name='essay', class="form-control", rows="3", id="essay_text")
-            .form-group
-              .col-sm-12.text-right
-                button(onclick="return false;",class='btn btn-default', id="enter_essay_button") enter essay
-                //input(type='submit',class='btn btn-default', value='enter essay')/
 
 
-        div(role='tabpanel', class='tab-pane', id='media')
-            h1 enter media
+    //.tab-content
 
-            form(action='/admin/add_media', method='post',  class='form-horizontal enter-media-form', id="add_media_form")
+    .container
+      .row
+
+
+
+        div(ng-show='show_add_essay')
+            h1 enter essay
+
+
+            form(ng-controller="AddEssayCtrl",ng-submit="addEssayFormFunction()" class='form-horizontal enter-media-form')
               .form-group
                 label.col-sm-2.control-label title:
                 .col-sm-10
-                  input(type='text', class='form-control', name='title', id='title_text', placeholder='title')/
-
-
+                  input(type='text', class='form-control', ng-model='essay_title_text', placeholder='title')/
               .form-group
-                label.col-sm-2.control-label author:
+                label.col-sm-2.control-label essay:
                 .col-sm-10
-                  input(type='text', class='form-control', name='author', id='author_text', placeholder='author')/
-
-              .form-group
-                label.col-sm-2.control-label genre:
-                .col-sm-10
-                  select(class='form-control' id='genre_select', name='genre_select')
-                    option(value='television') television
-                    option(value='book') book
-                    option(value='movie') movie
-
-
+                  textarea(class="form-control", rows="3", ng-model="essay_text")
               .form-group
                 .col-sm-12.text-right
-                  button(onclick="return false;",class='btn btn-default', id="enter_media_button") enter media button
-                  //input(type='submit',class='btn btn-default', value='enter media')/
-
-            h1.alert
-
-        div(role='tabpanel', class='tab-pane', id='comments')
-
-          h1 comments awaiting approval
-          table.table.table-striped.data-table
-            thead
-              tr
-                th essay title
-                th commenter
-                th comment
-                th approve?
-            tbody#table_body
-              -for(var i=0; i < comments.length; i++)
-                tr
-                  td #{comments[i].essay_title}
-                  td #{comments[i].name}
-                  td #{comments[i].comment}
-                  td
-                    a(href='/admin/approve_comment/#{comments[i].id}')
-                      button.btn.btn-success approve
-                    a(href='/admin/delete_comment/#{comments[i].id}')
-                      button.btn.btn-danger delete
+                  button(type='submit',class='btn btn-default', id="enter_essay_button") enter essay
+                  //input(type='submit',class='btn btn-default', value='enter essay')/
 
 
-        div(role='tabpanel', class='tab-pane', id='media')
 
 
-          h1 media entered
 
-          table.table.table-striped.data-table
-            thead
-              tr
-                th title
-                th author
-                th genre
-                th delete record
-            tbody#table_body
-              -for(var i=0; i < media_object.length; i++)
-                tr
-                  td #{media_object[i].title}
-                  td #{media_object[i].author}
-                  td #{media_object[i].genre}
-                  td
-                    a(href='/admin/delete_record/#{media_object[i].id}', id='confirm_#{media_object[i].id}', style='display:none')
-                      button(class='btn btn-danger', id='#{media_object[i].id}', name='#{media_object[i].title}') confirm deletion
+        div(ng-show='show_add_media')
+                  h1 enter media
 
-                    button(class='btn btn-warning cancel-delete', id='cancel_#{media_object[i].id}', name='#{media_object[i].id}',style='display:none') cancel deletion
+                  form(ng-controller="AddMediaCtrl",ng-submit="addMediaFormFunction()"   class='form-horizontal enter-media-form')
+                    .form-group
+                      label.col-sm-2.control-label title:
+                      .col-sm-10
+                        input(type='text', class='form-control', ng-model='media_title' placeholder='title')/
 
-                    button(class='btn btn-danger delete-record', id='delete_#{media_object[i].id}', name='#{media_object[i].id}') delete this record
 
-        div(role='tabpanel', class='tab-pane', id='deleteEditEssay')
+                    .form-group
+                      label.col-sm-2.control-label author:
+                      .col-sm-10
+                        input(type='text', class='form-control', ng-model='media_author' placeholder='author')/
 
-          table.table.table-striped
-            thead
-              tr
-                th id
-                th title
-                th edit
-                th delete
-            tbody#table_body
-              -for(var i=0; i < essays.length; i++)
-                tr
-                  td= essays[i].id
-                  td= essays[i].title
-                  td
-                    a(href='admin/edit_essay/#{essays[i].id}')
-                      button.btn.btn-warning edit
-                  td
-                    a(href='admin/delete_essay/#{essays[i].id}')
-                      button.btn.btn-danger delete
+                    .form-group
+                      label.col-sm-2.control-label genre:
+                      .col-sm-10
+                        select(class='form-control',ng-model='media_genre' )
+                          option(value='television') television
+                          option(value='book') book
+                          option(value='movie') movie
+
+
+                    .form-group
+                      .col-sm-12.text-right
+                        button(type='submit',class='btn btn-default', id="enter_media_button") enter media button
+                        //input(type='submit',class='btn btn-default', value='enter media')/
+
+                  h1.alert
+
+
+        div(ng-show='show_approve_comments',ng-controller="ApproveCommentsCtrl")
+
+              h1 comments awaiting approval
+              table.table.table-striped.data-table
+                thead
+                  tr
+                    th essay title
+                    th commenter
+                    th comment
+                    th approve?
+                tbody#table_body
+                  tr(ng-repeat='comment in comments')
+                    td {{comment.essay_title}}
+                    td {{comment.name}}
+                    td
+                      pre {{comment.comment}}
+                    td
+                      button(ng-click='approveComment(comment.id, $index)', class="btn btn-success") approve
+                      button(ng-click='deleteComment(comment.id, $index)', class="btn btn-danger") delete
+
+
+
+        div(ng-show='show_edit_media',ng-controller="ManageMediaCtrl")
+
+              h1 media entered
+
+              table.table.table-striped.data-table
+                thead
+                  tr
+                    th title
+                    th author
+                    th genre
+                    th delete record
+                tbody#table_body
+                  tr(ng-repeat='medium in media')
+                    td {{medium.title}}
+                    td {{medium.author}}
+                    td {{medium.genre}}
+                    td
+                      button(ng-click='confirmDeletion(medium.id, $index)', class='btn btn-danger',  ng-show='isVisible(medium)') confirm deletion
+
+                      button(ng-click='toggleVisibility(medium)', class='btn btn-success', ng-show='isVisible(medium)') cancel deletion
+
+                      button(ng-click='toggleVisibility(medium)', class='btn btn-primary', ng-hide='isVisible(medium)') delete this record
+
+
+        div(ng-show='show_delete_essays',ng-controller="DeleteEditEssaysCtrl")
+
+              h1 delete/edit essays
+
+
+              form(ng-show='show_edit_form',ng-submit="submitEssayEdits()", class='form-horizontal enter-media-form')
+                .form-group
+                  label.col-sm-2.control-label title:
+                  .col-sm-10
+                    input(type='text', class='form-control', ng-model='essays.edit_essay.essay_title')/
+                    input(type='hidden', class='form-control', ng-model='essays.edit_essay.id')/
+                .form-group
+                  label.col-sm-2.control-label essay:
+                  .col-sm-10
+                    textarea(name='essay', class="form-control", rows="30", ng-model='essays.edit_essay.essay')
+                    h1(ng-bind='warning2')
+                .form-group
+                  .col-sm-12.text-right
+                    input(type='submit', class='btn btn-default', value='submit edits')/
+
+
+              table(class='table table-striped', ng-hide='show_edit_form')
+                thead
+                  tr
+                    th id
+                    th title
+                    th edit
+                    th delete
+                tbody#table_body
+                  tr(ng-repeat='essay in essays')
+                    td {{essay.id}}
+                    td {{essay.essay_title}}
+                    td
+                      button(ng-click='editEssay(essay.id, $index)',class='btn btn-warning') edit
+                    td
+
+                      button(ng-click='toggleVisibility(essay)', class='btn btn-success', ng-show='isVisible(essay)') cancel deletion
+                      button(ng-click='toggleVisibility(essay)',class='btn btn-danger', ng-hide='isVisible(essay)') delete
+                      button(ng-click='deleteRecord(essay.id, $index)',class='btn btn-danger', ng-show='isVisible(essay)') confirm deletion
+
 
 
 

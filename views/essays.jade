@@ -1,57 +1,31 @@
 extends layout
 
 block content
+    script(src="/javascripts/angularApp_Essays.js")
+
+    .container
+      .row
+        ui-view
 
 
 
-    -records_per_page = parseInt(records_per_page);
-    -page_counter = parseInt(page_counter);
-    -start_number = parseInt(start_number);
-    -page_number = parseInt(page_number);
-    -records_per_li = parseInt(records_per_li);
-    -var max_value = page_counter+records_per_page;
-    -var new_start_number, new_page_number, new_page_counter;
 
-    -function between(x, min, max) {return x >= min && x <= max;};
+    script(type="text/ng-template" id="/essay_list.html")
 
 
-    -if(show_one === undefined)
-      .container
+      .container(ng-hide="show_one")
         .row
           .text-center
-            ul.pagination.pagination-sm
+            ul(class="pagination pagination-sm")
 
 
-
-              - var li_class = (page_number < records_per_page)?'disabled':'';
-              li(class=li_class)
-
-                - new_start_number = start_number+(records_per_li-1);
-                - new_page_number = page_number - records_per_page;
-                - new_page_counter = page_counter -records_per_page ;
-
-                -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
-                -if(page_number < records_per_page)link_string = "";
-
-                a(href="#{link_string}", aria-label="Previous")
+              li(class="{{essays.double_back_class}}")
+                a(ng-click="next('double_back')", aria-label="Previous")
                   span &laquo;
 
 
-
-              -  li_class = (page_number == 1)?'disabled':'';
-              li(class=li_class)
-
-                - new_start_number = start_number+(records_per_li-1);
-                - new_page_number = page_number-records_per_li;
-
-                -var prev_page_check = page_number;
-                -var beg_of_row = between(prev_page_check, page_counter, (page_counter + records_per_li));
-                - new_page_counter = (beg_of_row)?(page_counter-records_per_page):page_counter;
-
-                -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
-                -if(page_number == 1)link_string = "";
-
-                a(href='#{link_string}', aria-label="Previous")
+              li(class="{{essays.single_back_class}}")
+                a(ng-click="next('single_back')" aria-label="Previous")
                   span &lsaquo;
 
 
@@ -59,87 +33,43 @@ block content
 
 
 
-
-              -for(var i = page_counter; i < max_value; i++)
-
-                -if(i > total_records)break;
-
-
-                -var final_number = ((i+records_per_li) > total_records)?total_records:(i+records_per_li-1);
-                -if(final_number > max_value)final_number = max_value;
-
-                -var klass = (between(page_number, i, (final_number-1)))?'active':'';
-
-                -if((i-1) % records_per_li == 0)
-
-                    li(class=klass)
-                      -var new_start_number = total_records - (records_per_li+i)+1;
-                      a(href="/essays/?start_number=#{new_start_number}&p="+i+"&c="+page_counter)  #{i} - #{final_number}
+              li(ng-repeat='button_data in essays.button_data_array', class='{{button_data.class}}',ng-click="get_essay_list($index)")
+                span  {{button_data.i}} - {{button_data.final_number}}
 
 
 
-
-
-
-              -var shut_off_number = page_number+records_per_li;
-              -  li_class = (shut_off_number > total_records)?'disabled':'';
-              li(class=li_class)
-                -if(start_number == total_records)start_number -= (records_per_li-1);
-                - new_start_number = start_number-(records_per_li+1);
-                - new_page_number = page_number+records_per_li;
-                -var next_page_check = records_per_li+page_number;
-                -var end_of_row = between(next_page_check, page_counter, final_number);
-                - new_page_counter = (end_of_row)?page_counter:(page_counter+records_per_page);
-
-                -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
-                -if(shut_off_number > total_records)link_string = "";
-
-                a(href='#{link_string}', aria-label="Previous")
+              li(class="{{essays.single_forward_class}}")
+                //href='{{essays.single_forward_link_string}}',
+                a(ng-click="next('single_forward')",aria-label="Previous")
                   span &rsaquo;
 
 
 
 
-
-              -var shut_off_number = page_number+records_per_page;
-              -  li_class = (shut_off_number > total_records)?'disabled':'';
-              li(class=li_class)
-
-                - new_start_number = start_number - (records_per_page)-1;
-                - new_page_number = page_number+records_per_page;
-                - new_page_counter = page_counter +records_per_page;
-
-                -var link_string = "/essays/?start_number="+new_start_number+"&p="+new_page_number+"&c="+new_page_counter;
-                -if(new_page_counter > total_records)link_string = "#";
-
-                a(href='#{link_string}', aria-label="Previous")
+              li(class="{{essays.double_forward_class}}")
+                a(ng-click="next('double_forward')", aria-label="Previous")
                   span &raquo;
 
-          .text-center
-            p.total-text there are #{total_records} essays
 
 
 
           .text-center
+            p.total-text there are {{essays.total_records}} essays
+          .text-center
+
             ol
-            -for(var i = 0; i < essays.length; i++)
-                li.essay-list
-                  a(href='/essays/#{essays[i].id}')= essays[i].title+" created on "+essays[i].createdAt
+              li(class='essay',ng-repeat='essay in essays.essays')
+                ///essays/fetch_essay/{{essay.id}}
+                a(ng-click='fetch_essay($index)') {{essay.essay_title}} created on {{essay.createdAt}}
 
-    -else
-      .container
+      .container(ng-show="show_one")
         .row
+          a(ng-click='switch_to_list()') return to essay list
+          h2.essay-title {{essays.essay.essay_title}}
+          h3.essay-date {{essays.essay.updatedAt}}
+          pre.essay-format {{essays.essay.essay}}
 
-          .text-right
-            a(href='/essays')
-              button.btn.btn-success back to essays
-
-          h1.essay-title= essay.title
-          pre.essay-format= essay.essay
-
-
-
-          form(action='/essays/comment', method='post', id='comment_form', class='form-horizontal')
+          form(class='form-horizontal',ng-controller="CommentCtrl",ng-submit="addCommentInPageFunction()")
             .form-group
               .col-sm-12.text-center
                 h4.add-comment-text add comment
@@ -147,29 +77,42 @@ block content
             .form-group
               label.col-sm-2.control-label name:
               .col-sm-10
-                input(type='text', class='form-control', name='name', id='comment_name_id', placeholder='type name here')/
+                input(ng-model="comment_name",type='text', class='form-control', placeholder='type name here')/
                 input(type='text', class='form-control', name='test', id='test', style='display:none;')/
-                input(type='hidden', class='form-control', name='essay_id', value='#{essay.id}')/
-                input(type='hidden', class='form-control', name='essay_title', value='#{essay.title}')/
+                input(ng-model="essay_id",type='hidden', class='form-control', value='{{essays.essay.id}}')/
+                input(ng-model="essay_title",type='hidden', class='form-control',  value='{{essays.essay.essay_title}}')/
             .form-group
               label.col-sm-2.control-label comment:
               .col-sm-10
-                textarea(name='comment', class="form-control", rows="3", id="comment_text_id")
+                textarea(ng-model="comment_body", class="form-control", rows="3", id="comment_text_id")
             .form-group
               .col-sm-12.text-right
-                button(onclick="return false;",class='btn btn-default', id="enter_comment_button") submit comment
+                button(type='submit',class='btn btn-default', id="enter_comment_button") submit comment
                 //input(type='submit',class='btn btn-default', value='enter essay')/
+            .form-group
+              .col-sm-12.text-center
+                .alert {{warning}}
 
-        .row
-            .col-sm-12.text-center.alert
-
-        .row
-              -for(var i = 0; i < comments.length; i++)
-                if(comments[i].approved === true)
-                  .comment-div
-                    .comment-author name: #{comments[i].name}
-                    .comment-date date: #{comments[i].createdAt}
-                    pre.comment-text= comments[i].comment
+          div(ng-repeat='comment in essays.comments | reverse')
+            .comment-div
+              .comment-author name: {{comment.name}}
+              .comment-date date: {{comment.updatedAt}}
+              pre.comment-text {{comment.comment}}
 
 
-        .bottom-buffer
+
+
+
+
+
+
+
+
+
+
+
+  .bottom-buffer
+
+
+
+

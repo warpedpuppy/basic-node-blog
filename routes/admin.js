@@ -23,11 +23,11 @@ router.get('/logout', function (req, res) {
 
 router.get('/',checkAuth, function(req, res) {
 
+res.render('admin');
 
-
-  models.Media_table.findAll().then(function(media_object) {
+  /*models.Media_table.findAll().then(function(media_object) {
     models.Comments.findAll({where:{approved:false}}).then(function(comments) {
-        models.essays.findAll({ attributes: ['id', 'title'], order:"id DESC" }).then(function(essays) {
+        models.essays.findAll({ attributes: ['id', 'essay_title'], order:"id DESC" }).then(function(essays) {
 
           res.render('admin', {
             comments:comments,
@@ -38,9 +38,29 @@ router.get('/',checkAuth, function(req, res) {
     });
   });
 
-  });
+  });*/
 });
 
+router.get('/get_media',checkAuth, function(req, res) {
+
+
+  models.Media_table.findAll().then(function(media_object) {
+
+   res.json(media_object);
+
+   });
+});
+
+
+router.get('/get_unapproved_comments/', function(req, res) {
+
+  models.Comments.findAll({where:{approved:false}}).then(function(comments) {
+    res.json(comments);
+  });
+
+
+
+});
 router.get('/approve_comment/:d', function(req, res) {
 
   var approve_record = req.params.d;
@@ -56,7 +76,7 @@ router.get('/approve_comment/:d', function(req, res) {
   ).then(function(){
 
 
-    res.redirect("/admin");
+        res.json({success:true});
 
   })
 
@@ -68,22 +88,20 @@ router.get('/delete_essay/:d', function(req, res) {
 
   models.essays.destroy({where:{id:essay_to_delete}}).then(function(essay){
 
-    res.redirect("/admin");
+    res.json({success:true});
 
   })
 
 
 });
 
-router.get('/edit_essay/:d', function(req, res) {
+router.post('/edit_essay/:d', function(req, res) {
 
   var essay_to_edit = req.params.d;
 
   models.essays.findOne({where:{id:essay_to_edit}}).then(function(essay){
 
-    res.render("edit_essay",{
-      essay:essay
-    });
+    res.json(essay);
 
   })
 
@@ -93,17 +111,22 @@ router.get('/edit_essay/:d', function(req, res) {
 router.post('/submit_essay_edits/', function(req, res) {
 
   var id = req.body.id;
-  var title = req.body.title;
+  var title = req.body.essay_title;
   var essay = req.body.essay;
 
-  models.essays.update({
-    title:title,
-    essay:essay
-  },
-  {
-    where:{id:id}
-  }).then(function(){
-        res.redirect("/admin");
+  console.log(id+" "+title+" "+essay)
+
+  models.essays.update(
+        {
+        essay_title:title,
+        essay:essay
+        },
+        {
+        where:{id:id}
+        }
+  ).then(function(data){
+        console.log(data);
+        res.json({success:true});
 
   })
 
@@ -123,8 +146,8 @@ router.get('/delete_comment/:d', function(req, res) {
     }
   }).then(function(){
 
-
-    res.redirect("/admin");
+    res.json({success:true});
+    //res.redirect("/admin");
 
   })
 
@@ -132,19 +155,19 @@ router.get('/delete_comment/:d', function(req, res) {
 
 
 
-router.get('/delete_record/:d', function(req, res) {
+router.get('/delete_media/:d', function(req, res) {
 
-  var delete_record = req.params.d;
+  var delete_media = req.params.d;
 
 
   models.Media_table.destroy({
     where:{
-      id:delete_record
+      id:delete_media
     }
   }).then(function(){
 
-
-    res.redirect("/admin");
+    res.json({success:true});
+    //res.redirect("/admin");
 
   })
 
@@ -154,20 +177,21 @@ router.get('/delete_record/:d', function(req, res) {
 
 });
 
+
 router.post('/add_essay', function (req, res) {
 
-  var title = req.body.title;
+  var title = req.body.essay_title;
   var essay = req.body.essay;
 
   console.log(title);
 
 
   models.essays.create({
-    title: title,
+    essay_title: title,
     essay: essay
   }).then(function(){
 
-    res.redirect("/admin");
+    res.json({success:true});
 
   })
 });
@@ -179,7 +203,7 @@ router.post('/add_media', function (req, res) {
 
   var title = req.body.title;
   var author = req.body.author;
-  var genre = req.body.genre_select;
+  var genre = req.body.genre;
 
 
   models.Media_table.create({
@@ -187,13 +211,24 @@ router.post('/add_media', function (req, res) {
     author: author,
     genre:genre
   }).then(function(){
-
-    res.redirect("/admin");
+    res.json({success:true});
+   // res.redirect("/admin");
 
   })
 });
+router.get('/get_essay_list', function(req, res) {
 
 
 
+  models.essays.findAll({
+    attributes:['id', 'essay_title', 'essay']
+
+  }).then(function(data){
+    res.json(data);
+
+
+  })
+
+});
 
 module.exports = router;

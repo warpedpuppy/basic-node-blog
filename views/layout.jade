@@ -6,11 +6,16 @@ html
     link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src="//d3js.org/d3.v3.min.js")
+    script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
+    script(src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js")
+    //script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js")
+
     script(src='/javascripts/jquery.min.js')
-    script(src='/javascripts/custom.js')
+    //script(src='/javascripts/custom.js')
 
 
-  body
+
+  body(ng-app="ashlander")
     nav.navbar.navbar-default.navbar-static-top
       .container-fluid
           .navbar-header
@@ -20,7 +25,7 @@ html
                   span(class="icon-bar")
                   span(class="icon-bar")
 
-              a.navbar-brand blog title
+              a.navbar-brand node express angular blog
 
           .collapse.navbar-collapse#bs-example-navbar-collapse-1
               ul.nav.navbar-nav.navbar-right

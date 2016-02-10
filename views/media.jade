@@ -3,6 +3,8 @@ extends layout
 
 block content
 
+  script(src="/javascripts/angularApp.js")
+
   .container
     .row
       h1 media consumed
@@ -44,7 +46,7 @@ block content
 
 
         div(role='tabpanel', class='tab-pane', id='bubbles')
-          script(src='/javascripts/CustomToolTip.js')
+          script(src='/javascripts/CustomTooltip.js')
           script(src='/javascripts/d3_media_charts.js')
           #pagination_div
             ul.pagination
