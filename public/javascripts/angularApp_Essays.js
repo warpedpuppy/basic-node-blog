@@ -3,31 +3,9 @@
  */
 
 'use strict';
-var app = angular.module('ashlander', ['ui.router'])
-
-    .config([
-        '$stateProvider',
-        '$urlRouterProvider',
-        function ($stateProvider, $urlRouterProvider) {
-
-            $stateProvider
-                .state('essays', {
-                    url: '/essays',
-                    templateUrl: '/essay_list.html',
-                    controller: 'MainCtrl',
-                    resolve: {
-                        postPromise: ['essays', function (essays) {
-                            return essays.get_essay_list('start', 1, 0);
-                        }]
-
-                    }
-                });
+var app = angular.module('simple_node_blog', [])
 
 
-
-
-            $urlRouterProvider.otherwise('essays');
-        }])
 
     .filter('reverse', function () {
         return function (items) {
@@ -41,16 +19,9 @@ var app = angular.module('ashlander', ['ui.router'])
         $scope.essays = essays.essays;
         $scope.show_one = false;
 
-        //console.log("in control essays= "+$scope.essays.essays);
-        /*console.log("in control essays= "+$scope.essays.button_data_array);
+        essays.get_essay_list('start', 1, 0);
 
-         var arr = $scope.essays.button_data_array;
 
-         for(var i = 0; i < arr.length; i++){
-         for (var key in arr[i]){
-         // console.log(key+") "+arr[i][key]);
-         }
-         }*/
 
         $scope.get_essay_list = function (index) {
 
@@ -125,7 +96,7 @@ var app = angular.module('ashlander', ['ui.router'])
         $scope.essays = essays.essays;
 
 
-        $scope.addCommentInPageFunction = function () {
+        $scope.add_comment = function () {
 
             console.log("comment body = " + $scope.comment_body)
             if (
@@ -146,7 +117,6 @@ var app = angular.module('ashlander', ['ui.router'])
                     essay_title: $scope.essays.essay.essay_title
                 }).success(function (data) {
                     $scope.warning = "";
-                    $scope.essays.essay.Comments.push({name: $scope.comment_name, comment: $scope.comment_body, updatedAt: data.updatedAt});
                     $scope.comment_body = '';
                     $scope.comment_name = '';
                 });

@@ -10,6 +10,8 @@ block content
         .text-right
           a(href='/admin/logout')
             button.btn.btn-danger log out
+          //button(ng-click='emptyAndResetDBs()', class='btn btn-danger') empy and reset db
+          //button(ng-click='insert_records()', class='btn btn-danger') fill dbs
         ul.nav.nav-tabs
           li.active
             a(ng-click="showEnterEssay()", aria-controls='essay', role='tab', data-toggle='tab') enter essay
@@ -21,6 +23,8 @@ block content
             a(ng-click="showManageMedia()", aria-controls='media', role='tab', data-toggle='tab') manage media
           li
             a(ng-click="showDeleteEssays()", aria-controls='deleteEditEssay', role='tab', data-toggle='tab') delete/edit essays
+          li
+            a(ng-click="showAddLocation()", aria-controls='showAddLocation', role='tab', data-toggle='tab') add/delete location
 
 
 
@@ -54,10 +58,18 @@ block content
 
 
 
-        div(ng-show='show_add_media')
-                  h1 enter media
+        div(ng-show='show_add_media',ng-controller="AddMediaCtrl")
 
-                  form(ng-controller="AddMediaCtrl",ng-submit="addMediaFormFunction()"   class='form-horizontal enter-media-form')
+              ul.pagination
+                li(ng-class="{active: media_consumed_show}")
+                  a(ng-click='show_media(1)') media consumed
+                li(ng-class="{active: !media_consumed_show}")
+                  a(ng-click='show_media(2)') media created
+
+              div(id='media_consumed', ng-show='media_consumed_show')
+                  h1 enter media consumed
+
+                  form(ng-submit="addMediaFormFunction()",   class='form-horizontal enter-media-form')
                     .form-group
                       label.col-sm-2.control-label title:
                       .col-sm-10
@@ -72,10 +84,12 @@ block content
                     .form-group
                       label.col-sm-2.control-label genre:
                       .col-sm-10
-                        select(class='form-control',ng-model='media_genre' )
+                        select(class='form-control',ng-model='media_genre')
+                          option(value="") choose from the following:
                           option(value='television') television
                           option(value='book') book
                           option(value='movie') movie
+                          option(value='music') music
 
 
                     .form-group
@@ -83,13 +97,53 @@ block content
                         button(type='submit',class='btn btn-default', id="enter_media_button") enter media button
                         //input(type='submit',class='btn btn-default', value='enter media')/
 
-                  h1.alert
+                        h1 {{add_media_warning}}
+
+
+
+              div(id='media_created', ng-hide='media_consumed_show')
+                h1 enter media created
+
+                form(ng-submit="addMediaCreatedFormFunction()"   class='form-horizontal enter-media-form')
+                  .form-group
+                    label.col-sm-2.control-label title:
+                    .col-sm-10
+                      input(type='text', class='form-control', ng-model='media_created_title' placeholder='title')/
+
+                  .form-group
+                    label.col-sm-2.control-label description:
+                    .col-sm-10
+                      textarea(type='text', class='form-control', ng-model='media_created_description')
+
+                  .form-group
+                    .col-sm-12.text-right
+                      button(type='submit',class='btn btn-default', id="enter_media_button") enter media created
+                      //input(type='submit',class='btn btn-default', value='enter media')/
+
+                      h1 {{ media_created_warning }}
 
 
         div(ng-show='show_approve_comments',ng-controller="ApproveCommentsCtrl")
 
+              form(ng-show='comment_respond_form_show',ng-submit="submitCommentResponse()", class='form-horizontal enter-media-form')
+                .form-group
+                  label.col-sm-2.control-label comment:
+                  .col-sm-10
+                    input(type='text', class='form-control', ng-model='commenter_name_for_response')/
+                    input(type='text', class='form-control', ng-model='comment_for_response')/
+                    input(type='hidden', class='form-control', ng-model='comment_id_for_response')/
+                .form-group
+                  label.col-sm-2.control-label response:
+                  .col-sm-10
+                    textarea(class="form-control", rows="10", ng-model='comment_response')
+                    h1(ng-bind='warning2')
+                .form-group
+                  .col-sm-12.text-right
+                    input(type='submit', class='btn btn-default', value='approve comment and response')/
+
+
               h1 comments awaiting approval
-              table.table.table-striped.data-table
+              table(class='table table-striped data-table', ng-hide='comment_respond_form_show')
                 thead
                   tr
                     th essay title
@@ -104,33 +158,61 @@ block content
                       pre {{comment.comment}}
                     td
                       button(ng-click='approveComment(comment.id, $index)', class="btn btn-success") approve
-                      button(ng-click='deleteComment(comment.id, $index)', class="btn btn-danger") delete
+                      br
+                      button(ng-click='approveAndRespond(comment)', class="btn btn-primary") approve and respond
+                      br
+                      button(ng-click='deleteComment(comment.id, $index)', class="btn btn-danger", ng-hide='isVisible(comment)') delete
 
 
 
         div(ng-show='show_edit_media',ng-controller="ManageMediaCtrl")
 
-              h1 media entered
+              ol.pagination
+                li(ng-class="{active: show_delete_media_consumed}")
+                  a(ng-click='deleteMedia(1)') media consumed
+                li(ng-class="{active: !show_delete_media_consumed}")
+                  a(ng-click='deleteMedia(2)') media created
 
-              table.table.table-striped.data-table
-                thead
-                  tr
-                    th title
-                    th author
-                    th genre
-                    th delete record
-                tbody#table_body
-                  tr(ng-repeat='medium in media')
-                    td {{medium.title}}
-                    td {{medium.author}}
-                    td {{medium.genre}}
-                    td
-                      button(ng-click='confirmDeletion(medium.id, $index)', class='btn btn-danger',  ng-show='isVisible(medium)') confirm deletion
+              div(ng-show='show_delete_media_consumed')
+                h1 delete media consumed
+                table.table.table-striped.data-table
+                  thead
+                    tr
+                      th title
+                      th author
+                      th genre
+                      th delete record
+                  tbody#table_body
+                    tr(ng-repeat='medium in media')
+                      td {{medium.title}}
+                      td {{medium.author}}
+                      td {{medium.genre}}
+                      td
+                        button(ng-click='confirmDeletion(medium.id, $index)', class='btn btn-danger',  ng-show='isVisible(medium)') confirm deletion
 
-                      button(ng-click='toggleVisibility(medium)', class='btn btn-success', ng-show='isVisible(medium)') cancel deletion
+                        button(ng-click='toggleVisibility(medium)', class='btn btn-success', ng-show='isVisible(medium)') cancel deletion
 
-                      button(ng-click='toggleVisibility(medium)', class='btn btn-primary', ng-hide='isVisible(medium)') delete this record
+                        button(ng-click='toggleVisibility(medium)', class='btn btn-primary', ng-hide='isVisible(medium)') delete this record
 
+
+              div(ng-hide='show_delete_media_consumed')
+                h1 delete media created
+                table.table.table-striped.data-table
+                  thead
+                    tr
+                      th title
+                      th description
+                      th delete record
+                  tbody#table_body
+                    tr(ng-repeat='medium in media_created')
+                      td {{medium.title}}
+                      td {{medium.description}}
+                      td
+                        button(ng-click='confirmDeleteMediaCreated(medium.id, $index)', class='btn btn-danger',  ng-show='isVisible(medium)') confirm deletion
+
+                        button(ng-click='toggleVisibility(medium)', class='btn btn-success', ng-show='isVisible(medium)') cancel deletion
+
+                        button(ng-click='toggleVisibility(medium)', class='btn btn-primary', ng-hide='isVisible(medium)') delete this record
 
         div(ng-show='show_delete_essays',ng-controller="DeleteEditEssaysCtrl")
 
@@ -173,6 +255,64 @@ block content
                       button(ng-click='deleteRecord(essay.id, $index)',class='btn btn-danger', ng-show='isVisible(essay)') confirm deletion
 
 
+        div(ng-show='show_add_location', ng-controller="AddLocationCtrl")
+
+          ol.pagination
+            li(ng-class="{active: add_location_show}")
+              a(ng-click='showLocation(1)') add location
+            li(ng-class="{active: !add_location_show}")
+              a(ng-click='showLocation(2)') delete location
+
+          div(ng-show="add_location_show")
+            h1 add location
+            form(ng-submit="submitAddLocation()", class='form-horizontal')
+              .form-group
+                label.col-sm-2.control-label longitude(if S make negative):
+                .col-sm-10
+                  input(type='text', class='form-control', ng-model='map_data.longitude')/
+              .form-group
+                label.col-sm-2.control-label latitude (if W make negative):
+                .col-sm-10
+                  input(type='text', class='form-control', ng-model='map_data.latitude')/
+              .form-group
+                label.col-sm-2.control-label city:
+                .col-sm-10
+                  input(type='text', class='form-control', ng-model='map_data.city')/
+              .form-group
+                  label.col-sm-2.control-label state:
+                  .col-sm-10
+                    input(type='text', class='form-control', ng-model='map_data.state')/
+              .form-group
+                label.col-sm-2.control-label country:
+                .col-sm-10
+                  input(type='text', class='form-control', ng-model='map_data.country')/
+              .form-group
+                .col-sm-12.text-right
+                  input(type='submit', class='btn btn-default', value='add location')/
+                  h3 {{ map_warning }}
+
+          div(ng-hide="add_location_show")
+            h1 delete location
+            table.table.table-striped
+              thead
+                th city
+                th state
+                th country
+                th longitude
+                th latitude
+                th delete?
+              tbody
+                tr(ng-repeat='location in locations')
+                  td {{location.city}}
+                  td {{location.state}}
+                  td {{location.country}}
+                  td {{location.longitude}}
+                  td {{location.latitude}}
+                  td
+                    //ng-click='toggleVisibility(medium)', class='btn btn-success', ng-show='isVisible(medium)'
+                    button(ng-click='toggleVisibility(location)',class='btn btn-warning',ng-hide='isVisible(location)') delete?
+                    button(ng-click='deleteLocation(location.id, $index)',class='btn btn-danger',ng-show='isVisible(location)') confirm deletion?
+                    button(ng-click='toggleVisibility(location)',class='btn btn-warning',ng-show='isVisible(location)') cancel deletion
 
 
 
@@ -180,3 +320,4 @@ block content
 
 
 
+div(id='respond_to_comment')

@@ -7,6 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     name:DataTypes.STRING,
     comment: DataTypes.TEXT,
     essay_title:DataTypes.TEXT,
+    response:DataTypes.TEXT,
     approved: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

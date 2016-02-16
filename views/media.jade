@@ -2,52 +2,70 @@ extends layout
 
 
 block content
+  script(src="//d3js.org/d3.v3.min.js")
+  script(src="/javascripts/angularApp_Media.js")
 
-  script(src="/javascripts/angularApp.js")
 
   .container
     .row
-      h1 media consumed
 
 
-      ul.nav.nav-tabs
+
+      ul( class='nav nav-tabs')
         li.active
           a(href="#media", aria-controls='media', role='tab', data-toggle='tab') media consumed
+        li
+          a(href="#media_created", aria-controls='media_created', role='tab', data-toggle='tab') media created
         li
           a(href="#bar_chart", aria-controls='bar_chart', role='tab', data-toggle='tab') bar chart
         li
           a(href="#bubbles", aria-controls='bubbles', role='tab', data-toggle='tab') bubble chart
+        li
+          a(href="#map", aria-controls='map', role='tab', data-toggle='tab') where've I been?
 
 
       .tab-content
-        div(role='tabpanel', class='tab-pane active', id='media')
+        div(ng-controller="MainCtrl", role='tabpanel', class='tab-pane active', id='media')
+          h1 media consumed
           table.table.table-striped
             thead
-              th title
+              th title {{testing}}
               th author
               th genre
             tbody
+                tr(ng-repeat='medium in media')
+                  td {{medium.title}}
+                  td {{medium.author}}
+                  td {{medium.genre}}
+
+
+        div(ng-controller='MediaCreatedCtrl',role='tabpanel', class='tab-pane', id='media_created')
+              h1 media created
+              table.table.table-striped
+                thead
+                  th title
+                  th description
+                tbody
+                  tr(ng-repeat='medium in media_created')
+                    td {{medium.title}}
+                    td {{medium.description}}
 
 
 
-              -for(var i = 0; i < media_object.length; i ++)
-                tr
-                  td= media_object[i].title
-                  td= media_object[i].author
-                  td= media_object[i].genre
 
 
         div(role='tabpanel', class='tab-pane', id='bar_chart')
-            svg.bar_chart
+            #bar_chart
+            script(src='/javascripts/d3_media_charts.js')
+            //åscript(src='/javascripts/bar_chart.js')
 
-              script.
 
 
 
 
         div(role='tabpanel', class='tab-pane', id='bubbles')
           script(src='/javascripts/CustomTooltip.js')
-          script(src='/javascripts/d3_media_charts.js')
+
           #pagination_div
             ul.pagination
               li.active
@@ -56,3 +74,9 @@ block content
                 a(onclick="return false", id="show_media") seperate by media
 
           svg#chart_bubble_test
+
+
+        div(role='tabpanel', class='tab-pane', id='map')
+          #map_div
+          script(src='/javascripts/map_make.js')
+

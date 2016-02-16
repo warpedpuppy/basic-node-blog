@@ -33,15 +33,19 @@
             };
             this.genre_centers = {
                 "book": {
-                    x: (this.width / 3) - 100,
+                    x: (this.width *.2)+50,
                     y: this.height / 2
                 },
                 "television": {
-                    x: this.width / 2,
+                    x: this.width *.4,
                     y: this.height / 2
                 },
                 "movie": {
-                    x: (2 * this.width / 3) + 100,
+                    x: (this.width *.6)-50,
+                    y: this.height / 2
+                },
+                "music": {
+                    x: (this.width *.8),
                     y: this.height / 2
                 }
             };
@@ -131,8 +135,10 @@
                     fill = "#FF0000"
                 else if (d.genre === "book")
                     fill = "#FFFFFF"
-                else
+                else if (d.genre === "movie")
                     fill = "#666000";
+                else
+                    fill = "#FFFF00"
 
                 return fill;
 
@@ -221,9 +227,10 @@
         BubbleChart.prototype.display_genres = function () {
             var genres, genres_data, genres_x;
             genres_x = {
-                "books": 160,
-                "television": this.width / 2,
-                "movies": this.width - 160
+                "books": this.width *.2,
+                "television": this.width *.4,
+                "movies": this.width *.6,
+                "music":this.width *.8
             };
             genres_data = d3.keys(genres_x);
             genres = this.vis.selectAll(".genres").data(genres_data);
@@ -288,7 +295,7 @@
         .scale(y)
         .orient("left")
         .ticks(15, "");
-    var svg = d3.select(".bar_chart").append("svg")
+    var svg = d3.select("#bar_chart").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -297,7 +304,6 @@
 
 
     BarChart = function(data){
-
 
                     var count = {};
 
@@ -336,6 +342,7 @@
                     })]);
 
                     data = graph_array;
+                    console.log(data)
 
                     svg.append("g")
                         .attr("class", "x axis")
@@ -394,6 +401,7 @@
         })
 
         render_vis = function (csv) {
+
             BarChart(csv);
             chart = new BubbleChart(csv);
             chart.start();
@@ -421,6 +429,11 @@
 
         return d3.json("/media/grab_json", render_vis);
     });
+
+
+
+
+
 
 
 }).call(this);

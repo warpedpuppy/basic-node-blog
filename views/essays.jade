@@ -1,104 +1,101 @@
 extends layout
 
 block content
-    script(src="/javascripts/angularApp_Essays.js")
+      script(src="/javascripts/angularApp_Essays.js")
 
-    .container
-      .row
-        ui-view
-
-
-
-
-    script(type="text/ng-template" id="/essay_list.html")
+      div(ng-controller="MainCtrl")
+        .container(ng-hide="show_one")
+          .row
+            .text-center
+              ul(class="pagination pagination-sm")
 
 
-      .container(ng-hide="show_one")
-        .row
-          .text-center
-            ul(class="pagination pagination-sm")
+                li(class="{{essays.double_back_class}}")
+                  a(ng-click="next('double_back')", aria-label="Previous")
+                    span &laquo;
 
 
-              li(class="{{essays.double_back_class}}")
-                a(ng-click="next('double_back')", aria-label="Previous")
-                  span &laquo;
-
-
-              li(class="{{essays.single_back_class}}")
-                a(ng-click="next('single_back')" aria-label="Previous")
-                  span &lsaquo;
+                li(class="{{essays.single_back_class}}")
+                  a(ng-click="next('single_back')" aria-label="Previous")
+                    span &lsaquo;
 
 
 
 
 
 
-              li(ng-repeat='button_data in essays.button_data_array', class='{{button_data.class}}',ng-click="get_essay_list($index)")
-                span  {{button_data.i}} - {{button_data.final_number}}
+                li(ng-repeat='button_data in essays.button_data_array', class='{{button_data.class}}',ng-click="get_essay_list($index)")
+                  span  {{button_data.i}} - {{button_data.final_number}}
 
 
 
-              li(class="{{essays.single_forward_class}}")
-                //href='{{essays.single_forward_link_string}}',
-                a(ng-click="next('single_forward')",aria-label="Previous")
-                  span &rsaquo;
-
-
-
-
-              li(class="{{essays.double_forward_class}}")
-                a(ng-click="next('double_forward')", aria-label="Previous")
-                  span &raquo;
+                li(class="{{essays.single_forward_class}}")
+                  //href='{{essays.single_forward_link_string}}',
+                  a(ng-click="next('single_forward')",aria-label="Previous")
+                    span &rsaquo;
 
 
 
 
-          .text-center
-            p.total-text there are {{essays.total_records}} essays
-          .text-center
+                li(class="{{essays.double_forward_class}}")
+                  a(ng-click="next('double_forward')", aria-label="Previous")
+                    span &raquo;
 
-            ol
-              li(class='essay',ng-repeat='essay in essays.essays')
-                ///essays/fetch_essay/{{essay.id}}
-                a(ng-click='fetch_essay($index)') {{essay.essay_title}} created on {{essay.createdAt}}
 
-      .container(ng-show="show_one")
-        .row
-          a(ng-click='switch_to_list()') return to essay list
-          h2.essay-title {{essays.essay.essay_title}}
-          h3.essay-date {{essays.essay.updatedAt}}
-          pre.essay-format {{essays.essay.essay}}
 
-          form(class='form-horizontal',ng-controller="CommentCtrl",ng-submit="addCommentInPageFunction()")
-            .form-group
-              .col-sm-12.text-center
-                h4.add-comment-text add comment
-                div.post-warning warning: I only post the comments I like, so be nice!
-            .form-group
-              label.col-sm-2.control-label name:
-              .col-sm-10
-                input(ng-model="comment_name",type='text', class='form-control', placeholder='type name here')/
-                input(type='text', class='form-control', name='test', id='test', style='display:none;')/
-                input(ng-model="essay_id",type='hidden', class='form-control', value='{{essays.essay.id}}')/
-                input(ng-model="essay_title",type='hidden', class='form-control',  value='{{essays.essay.essay_title}}')/
-            .form-group
-              label.col-sm-2.control-label comment:
-              .col-sm-10
-                textarea(ng-model="comment_body", class="form-control", rows="3", id="comment_text_id")
-            .form-group
-              .col-sm-12.text-right
-                button(type='submit',class='btn btn-default', id="enter_comment_button") submit comment
-                //input(type='submit',class='btn btn-default', value='enter essay')/
-            .form-group
-              .col-sm-12.text-center
-                .alert {{warning}}
 
-          div(ng-repeat='comment in essays.comments | reverse')
-            .comment-div
-              .comment-author name: {{comment.name}}
-              .comment-date date: {{comment.updatedAt}}
-              pre.comment-text {{comment.comment}}
+            .text-center
+              p.total-text there are {{essays.total_records}} essays
+            .text-center
 
+              ol.list-group
+                li(class='essay list-group-item',ng-repeat='essay in essays.essays')
+
+                  a(ng-click='fetch_essay($index)') {{essay.essay_title}} created on {{essay.createdAt}}
+
+
+
+
+
+        .container(ng-show="show_one")
+          .row
+            a(ng-click='switch_to_list()') return to essay list
+            h2.essay-title {{essays.essay.essay_title}}
+            h3.essay-date {{essays.essay.updatedAt}}
+            pre.essay-format {{essays.essay.essay}}
+
+            form(class='form-horizontal',ng-controller="CommentCtrl",ng-submit="add_comment()")
+              .form-group
+                .col-sm-12.text-center
+                  h4.add-comment-text add comment
+                  div.post-warning warning: I only post the comments I like, so be nice!
+              .form-group
+                label.col-sm-2.control-label name:
+                .col-sm-10
+                  input(ng-model="comment_name",type='text', class='form-control', placeholder='type name here')/
+                  input(type='text', class='form-control', ng-model='test', style='display:none;')/
+                  input(ng-model="essay_id",type='hidden', class='form-control')/
+                  input(ng-model="essay_title",type='hidden', class='form-control')/
+              .form-group
+                label.col-sm-2.control-label comment:
+                .col-sm-10
+                  textarea(ng-model="comment_body", class="form-control", rows="3", id="comment_text_id")
+              .form-group
+                .col-sm-12.text-right
+                  button(type='submit',class='btn btn-default') submit comment
+
+              .form-group
+                .col-sm-12.text-center
+                  .alert {{warning}}
+
+            div(ng-repeat='comment in essays.comments | reverse')
+              .comment-div
+                .comment-author name: {{comment.name}}
+                .comment-date date: {{comment.updatedAt}}
+                pre.comment-text {{comment.comment}}
+                pre(ng-if="comment.response")
+                  span response
+                  .comment-text {{comment.response}}
 
 
 

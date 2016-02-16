@@ -3,22 +3,8 @@
  */
 
 'use strict';
-var app = angular.module('ashlander', ['ui.router'])
+var app = angular.module('simple_node_blog', [])
 
-    .config([
-        '$stateProvider',
-        '$urlRouterProvider',
-        function ($stateProvider, $urlRouterProvider) {
-
-            $stateProvider
-                .state('admin', {
-                    url: '/admin',
-                    templateUrl: '/enter_essay.html',
-                    controller: 'MainCtrl'
-                });
-
-            $urlRouterProvider.otherwise('admin');
-        }])
 
 
 
@@ -31,7 +17,7 @@ var app = angular.module('ashlander', ['ui.router'])
     })
 
 
-    .controller('MainCtrl', ['$scope', 'essays','comments', 'media', function ($scope, essays,comments, media) {
+    .controller('MainCtrl', ['$scope', 'essays','comments', 'media', '$http',function ($scope, essays,comments, media,$http) {
 
 
         $scope.show_add_essay = true;
@@ -39,7 +25,23 @@ var app = angular.module('ashlander', ['ui.router'])
         $scope.show_approve_comments = false;
         $scope.show_edit_media = false;
         $scope.show_delete_essays = false;
+        $scope.show_add_location = false;
         $scope.media = media.media;
+
+        $scope.emptyAndResetDBs = function(){
+            return $http.get('/admin/clear_dbs/').success(function (data) {
+
+            });
+
+        }
+
+
+        $scope.insert_records = function(){
+            return $http.post('/admin/insert_records/').success(function (data) {
+
+            });
+
+        }
 
         $scope.setMaster = function(section) {
             $scope.selected = section;
@@ -90,12 +92,43 @@ var app = angular.module('ashlander', ['ui.router'])
             $scope.show_delete_essays = true;
             essays.get_essay_list();
         }
+        $scope.showAddLocation = function(){
+            $scope.show_add_essay = false;
+            $scope.show_add_media = false;
+            $scope.show_approve_comments = false;
+            $scope.show_edit_media = false;
+            $scope.show_delete_essays = false;
+            $scope.show_add_location = true;
+        }
 
 
     }])
 
-    .controller('ManageMediaCtrl', ['$scope', 'media', function ($scope, media) {
+    .controller('ManageMediaCtrl', ['$scope', 'media', '$http',function ($scope, media,$http) {
         $scope.media = media.media;
+        $scope.show_delete_media_consumed = true
+        $scope.deleteMedia = function(id){
+            if(id === 1){
+                $scope.show_delete_media_consumed = true
+            }
+            else{
+                $scope.show_delete_media_consumed = false
+            }
+        }
+
+        $scope.media_created = [];
+        $http.post("/admin/get_media_created").success(function (data) {
+            console.log("media created = "+data)
+            angular.copy(data, $scope.media_created);
+        });
+
+        $scope.confirmDeleteMediaCreated = function(id, index){
+            $http.get("/admin/delete_media_created/"+id).success(function (data) {
+                //console.log("media created = "+data)
+                //angular.copy(data, $scope.media_created);
+                $scope.media_created.splice(index, 1);
+            });
+        }
 
         $scope.confirmDeletion = function(id, index){
 
@@ -113,6 +146,82 @@ var app = angular.module('ashlander', ['ui.router'])
         $scope.isVisible = function(model) {
             return $scope.selected === model;
         };
+
+    }])
+    .controller('AddLocationCtrl', ['$scope', '$http', function ($scope, $http) {
+
+        $scope.map_warning = 'warning';
+        $scope.map_data = {};
+        $scope.locations = [];
+
+        $http.post("/admin/get_locations").success(function (data) {
+            console.log("map data = "+data)
+            angular.copy(data, $scope.locations);
+        });
+
+        $scope.deleteLocation = function(id, index){
+            $http.get("/admin/delete_location/"+id).success(function (data) {
+                $scope.locations.splice(index, 1)
+            });
+        }
+
+        $scope.toggleVisibility = function(model) {
+            $scope.selected = ($scope.selected === undefined)?model:undefined;
+        };
+        $scope.isVisible = function(model) {
+            return $scope.selected === model;
+        };
+
+       // $scope.map_data.latitude = "42.192172";
+       // $scope.map_data.longitude = "-122.700426";
+
+        $scope.add_location_show = true;
+        $scope.showLocation = function(id){
+            if(id === 1){
+                $scope.add_location_show = true;
+            }
+            else{
+                $scope.add_location_show = false;
+            }
+        }
+        $scope.submitAddLocation = function(){
+
+
+                if (
+                    $scope.map_data.longitude === ""||
+                    $scope.map_data.latitude == "" ||
+                    $scope.map_data.city == "" ||
+                    $scope.map_data.state == "" ||
+                    $scope.map_data.country == "") {
+
+                    $scope.map_data.longitude = "";
+                    $scope.map_data.latitude = "";
+                    $scope.map_data.city = "";
+                    $scope.map_data.state = "";
+                    $scope.map_data.country = "";
+
+                    $scope.map_warning = "please fill everything out";
+                    return;
+                }
+                else{
+
+                    return $http.post('/admin/add_location/',$scope.map_data).success(function (data) {
+
+                        $scope.map_data.longitude = "";
+                        $scope.map_data.latitude = "";
+                        $scope.map_data.city = "";
+                        $scope.map_data.state = "";
+                        $scope.map_data.country = "";
+                        //$scope.map_data.latitude = "42.29048";
+                       // $scope.map_data.longitude = "-71.16706";
+                        $scope.map_warning = "entered";
+                    });
+
+                }
+            }
+
+
+
 
     }])
 
@@ -233,6 +342,7 @@ var app = angular.module('ashlander', ['ui.router'])
     .controller('ApproveCommentsCtrl', ['$scope', 'comments', function ($scope, comments) {
 
         $scope.comments = comments.comments;
+        $scope.comment_respond_form_show = false;
 
         $scope.approveComment = function(id, index){
 
@@ -243,6 +353,18 @@ var app = angular.module('ashlander', ['ui.router'])
             });
         }
 
+        $scope.approveAndRespond = function(comment){
+            $scope.comment_respond_form_show = true;
+            $scope.store_comment = comment.comment;
+            $scope.comment_for_response = comment.comment;
+            $scope.comment_id_for_response = comment.id;
+            $scope.commenter_name_for_response = comment.name;
+
+
+        }
+
+
+
         $scope.deleteComment = function(id, index){
 
             comments.delete_comment(id).success(function(data){
@@ -251,11 +373,59 @@ var app = angular.module('ashlander', ['ui.router'])
             });
 
         }
+
+        $scope.submitCommentResponse = function(){
+
+            if($scope.comment_for_response === ""){
+                $scope.comment_for_response = $scope.store_comment;
+                return;
+            }
+            else{
+
+                comments.add_response_and_approve({
+                    id: $scope.comment_id_for_response,
+                    comment: $scope.comment_for_response,
+                    response: $scope.comment_response
+                }).success(function(){
+                    $scope.comment_respond_form_show = false;
+                            console.log("success response")
+                });
+
+            }
+
+
+        }
+
+
+
+
+        $scope.toggleVisibility = function(model) {
+            $scope.selected = ($scope.selected === undefined)?model:undefined;
+        };
+        $scope.isVisible = function(model) {
+            return $scope.selected === model;
+        };
+
+
+
     }])
+
+
 
     .controller('AddMediaCtrl', ['$scope', 'media', function ($scope, media) {
 
+        $scope.media_consumed_show = true;
+        $scope.show_media = function(int){
+            if(int === 1)
+                $scope.media_consumed_show = true;
+            else{
+                $scope.media_consumed_show = false;
+            }
+
+        }
         $scope.addMediaFormFunction = function () {
+
+
             if (
                 $scope.media_title === undefined ||
                 $scope.media_author === undefined ||
@@ -264,8 +434,8 @@ var app = angular.module('ashlander', ['ui.router'])
                 $scope.media_author === "") {
                 $scope.media_title = '';
                 $scope.media_author = '';
-                $scope.media_genre = $scope.media_genre[0];
-                $scope.warning = "please fill everything out";
+                $scope.media_genre = undefined;
+                $scope.add_media_warning = "please fill everything out";
                 return;
             }
             else{
@@ -274,17 +444,37 @@ var app = angular.module('ashlander', ['ui.router'])
                     author: $scope.media_author,
                     genre: $scope.media_genre
                 }).success(function (data) {
-                    $scope.warning = "";
+                    $scope.add_media_warning = "";
                     $scope.media_title = '';
                     $scope.media_author = '';
-                    $scope.media_genre = $scope.media_genre[0];
+                    $scope.media_genre = undefined;
+                });
+
+            }
+        }
+
+
+        $scope.addMediaCreatedFormFunction = function () {
+            if (
+                $scope.media_created_title === "" ||
+                $scope.media_created_description === "") {
+                $scope.media_created_warning = "please fill everything out";
+                return;
+            }
+            else{
+                media.add_media_created({
+                    title: $scope.media_created_title,
+                    description: $scope.media_created_description
+                }).success(function (data) {
+                    $scope.media_created_warning = "";
+                    $scope.media_created_title = '';
+                    $scope.media_created_description = '';
                 });
 
             }
         }
 
     }])
-
 
     .factory('media', ['$http', function ($http) {
         var o = {
@@ -308,7 +498,14 @@ var app = angular.module('ashlander', ['ui.router'])
                 console.log("approve comment success")
             });
         };
+        o.add_media_created = function (media) {
+            //console.log("TESTING + "+media.title);
+            return $http.post('/admin/add_media_created/',media).success(function (data) {
 
+                console.log("success media created");
+                //angular.copy(data, o.essays);
+            });
+        };
         o.add_media = function (media) {
             //console.log("TESTING + "+media.title);
             return $http.post('/admin/add_media/',media).success(function (data) {
@@ -322,7 +519,20 @@ var app = angular.module('ashlander', ['ui.router'])
         return o;
     }])
 
+    .factory('map_data', ['$http', function ($http) {
+        var o = {
+            map_data: []
+        };
+        o.get_unapproved_comments = function () {
 
+            return $http.get("/admin/get_unapproved_comments").success(function (data) {
+                var reverse_it = data.reverse();
+                angular.copy(reverse_it, o.comments);
+            });
+        };
+
+        return o;
+    }])
 
     .factory('comments', ['$http', function ($http) {
         var o = {
@@ -349,6 +559,13 @@ var app = angular.module('ashlander', ['ui.router'])
                 console.log("approve comment success")
             });
         };
+        o.add_response_and_approve = function(data){
+
+            return $http.post("/admin/approve_and_respond_to_comment/", data).success(function (data) {
+
+                console.log("approve comment/response success")
+            });
+        }
 
 
 
@@ -399,7 +616,7 @@ var app = angular.module('ashlander', ['ui.router'])
 
 
         o.add_essay = function (essay) {
-            console.log("TESTING + "+essay.essay_title);
+
             return $http.post('/admin/add_essay/',essay).success(function (data) {
 
                 console.log("success 2");

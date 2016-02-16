@@ -1,56 +1,51 @@
 extends layout
 
 block content
-        script(src="/javascripts/angularApp.js")
+        script(src="/javascripts/angularApp_Index.js")
 
 
 
-        .container
-            .row
-                ui-view
+        .container(ng-controller='MainCtrl')
+          .row
 
 
+              h2.essay-title {{essays.essay.essay_title}}
+              h3.essay-date {{essays.essay.updatedAt}}
+              pre.essay-format {{essays.essay.essay}}
 
+              form(class='form-horizontal',ng-controller="CommentCtrl",ng-submit="add_comment()")
+                .form-group
+                    .col-sm-12.text-center
+                        h4.add-comment-text add comment
+                        div.post-warning warning: I only post the comments I like, so be nice!
+                .form-group
+                    label.col-sm-2.control-label name:
+                    .col-sm-10
+                        input(ng-model="comment_name",type='text', class='form-control', placeholder='type name here')/
+                        input(type='text', class='form-control', ng-model='test', style='display:none;')/
+                        input(ng-model="essay_id",type='hidden', class='form-control')/
+                        input(ng-model="essay_title",type='hidden', class='form-control')/
+                .form-group
+                    label.col-sm-2.control-label comment:
+                    .col-sm-10
+                        textarea(ng-model="comment_body", class="form-control", rows="3")
+                .form-group
+                    .col-sm-12.text-right
+                        button(type='submit',class='btn btn-default') submit comment
 
-        script(type="text/ng-template" id="/home.html")
-            .container
-              .row
-                  //div(ng-repeat="essay in essays")
+                .form-group
+                    .col-sm-12.text-center
+                        .alert {{warning}}
 
-                  h2.essay-title {{essays.essay.essay_title}}
-                  h3.essay-date {{essays.essay.updatedAt}}
-                  pre.essay-format {{essays.essay.essay}}
-                    //action='/comment', method='post',id='comment_form',
-                  form(class='form-horizontal',ng-controller="CommentCtrl",ng-submit="addCommentInPageFunction()")
-                    .form-group
-                        .col-sm-12.text-center
-                            h4.add-comment-text add comment
-                            div.post-warning warning: I only post the comments I like, so be nice!
-                    .form-group
-                        label.col-sm-2.control-label name:
-                        .col-sm-10
-                            input(ng-model="comment_name",type='text', class='form-control', placeholder='type name here')/
-                            input(type='text', class='form-control', name='test', id='test', style='display:none;')/
-                            input(ng-model="essay_id",type='hidden', class='form-control', value='{{essay.essay_id}}')/
-                            input(ng-model="essay_title",type='hidden', class='form-control',  value='{{essay.essay_title}}')/
-                    .form-group
-                        label.col-sm-2.control-label comment:
-                        .col-sm-10
-                            textarea(ng-model="comment_body", class="form-control", rows="3", id="comment_text_id")
-                    .form-group
-                        .col-sm-12.text-right
-                            button(type='submit',class='btn btn-default', id="enter_comment_button") submit comment
-                            //input(type='submit',class='btn btn-default', value='enter essay')/
-                    .form-group
-                        .col-sm-12.text-center
-                            .alert {{warning}}
-
-                   div(ng-repeat='comment in essays.comments | reverse')
-                      .comment-div
-                          .comment-author name: {{comment.name}}
-                          .comment-date date: {{comment.updatedAt}}
-                          .comment-date approved: {{comment.approved}}
-                          pre.comment-text {{comment.comment}}
+               div(ng-repeat='comment in essays.comments | reverse')
+                  .comment-div
+                      .comment-author name: {{comment.name}}
+                      .comment-date date: {{comment.updatedAt}}
+                      .comment-date approved: {{comment.approved}}
+                      pre.comment-text {{comment.comment}}
+                      pre(ng-if="comment.response")
+                        span response:
+                        .comment-text {{comment.response}}
 
 
 

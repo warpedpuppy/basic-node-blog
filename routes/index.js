@@ -7,10 +7,12 @@ var router = express.Router();
 
 router.get('/', function(req, res) {
 
-/*models.Comments.drop();
-models.Comments.destroy({truncate:true});
-models.essays.drop();
-models.essays.destroy({truncate:true});*/
+/**/
+  /*   models.Comments.destroy({truncate:true});
+     models.essays.destroy({truncate:true});
+    models.essays.drop();
+    models.Comments.drop();*/
+
    // add_fake_essays();
     res.render("index");
 
@@ -120,7 +122,6 @@ function add_fake_essays(){
     }
 
 }
-
 
 
 module.exports = router;
