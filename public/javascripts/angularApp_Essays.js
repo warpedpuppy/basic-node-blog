@@ -3,7 +3,7 @@
  */
 
 'use strict';
-var app = angular.module('simple_node_blog', [])
+var app = angular.module('simple_node_blog', ['ui.tinymce'])
 
 
 
@@ -14,11 +14,11 @@ var app = angular.module('simple_node_blog', [])
     })
 
 
-    .controller('MainCtrl', ['$scope', 'essays', function ($scope, essays) {
+    .controller('MainCtrl', ['$scope', 'essays','$sce', function ($scope, essays,$sce) {
 
         $scope.essays = essays.essays;
         $scope.show_one = false;
-
+        $scope.trust = $sce.trustAsHtml;
         essays.get_essay_list('start', 1, 0);
 
 
@@ -32,6 +32,8 @@ var app = angular.module('simple_node_blog', [])
             essays.get_essay_list(start_number, p, c).success(function (data) {
                 //$scope.button_data_array = essays.button_data_array;
                 console.log("success = " + data);
+                //$scope.comments = essays.essays.comments.reverse();
+
             })
 
         }
@@ -90,11 +92,11 @@ var app = angular.module('simple_node_blog', [])
     }])
 
 
-    .controller('CommentCtrl', ['$scope', 'essays', function ($scope, essays) {
+    .controller('CommentCtrl', ['$scope', 'essays','$sce', function ($scope, essays,$sce) {
 
 
         $scope.essays = essays.essays;
-
+        $scope.trust = $sce.trustAsHtml;
 
         $scope.add_comment = function () {
 

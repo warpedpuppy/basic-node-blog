@@ -8,12 +8,12 @@ var router = express.Router();
 router.get('/', function(req, res) {
 
 /**/
-  /*   models.Comments.destroy({truncate:true});
+    /* models.Comments.destroy({truncate:true});
      models.essays.destroy({truncate:true});
     models.essays.drop();
     models.Comments.drop();*/
 
-   // add_fake_essays();
+    //add_fake_essays();
     res.render("index");
 
 });

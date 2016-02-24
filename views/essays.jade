@@ -1,7 +1,18 @@
 extends layout
 
 block content
+
+      script(type="text/javascript" src="/bower_components/tinymce-dist/tinymce.js")
+      script(type="text/javascript" src="/bower_components/angular-ui-tinymce/src/tinymce.js")
       script(src="/javascripts/angularApp_Essays.js")
+      script.
+        tinymce.init({
+          selector:'div.comment-div',
+          menubar: false,
+          statusbar: false,
+          toolbar:false
+        })
+
 
       div(ng-controller="MainCtrl")
         .container(ng-hide="show_one")
@@ -46,7 +57,7 @@ block content
 
             .text-center
               p.total-text there are {{essays.total_records}} essays
-            .text-center
+            .text-center.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3
 
               ol.list-group
                 li(class='essay list-group-item',ng-repeat='essay in essays.essays')
@@ -58,28 +69,40 @@ block content
 
 
         .container(ng-show="show_one")
-          .row
-            a(ng-click='switch_to_list()') return to essay list
-            h2.essay-title {{essays.essay.essay_title}}
-            h3.essay-date {{essays.essay.updatedAt}}
-            pre.essay-format {{essays.essay.essay}}
+          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2
+            button(class="btn btn-default" ng-click='switch_to_list()') return to essay list
 
+          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2.essay-header
+            .col-xs-6.col-sm-6
+              h2.essay-title {{essays.essay.essay_title}}
+            .col-xs-6.col-sm-6.essay-date
+              h3.essay-date {{essays.essay.updatedAt}}
+
+
+          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2
+            div(class="essay-format" ng-bind-html="trust(essays.essay.essay)")
+
+
+           .col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3
             form(class='form-horizontal',ng-controller="CommentCtrl",ng-submit="add_comment()")
               .form-group
                 .col-sm-12.text-center
                   h4.add-comment-text add comment
-                  div.post-warning warning: I only post the comments I like, so be nice!
+                  div.post-warning warning: all comments must be approved
               .form-group
-                label.col-sm-2.control-label name:
-                .col-sm-10
+                .col-xs-2.col-sm-2.control-label
+                  label name:
+                .col-xs-10.col-sm-10
                   input(ng-model="comment_name",type='text', class='form-control', placeholder='type name here')/
                   input(type='text', class='form-control', ng-model='test', style='display:none;')/
                   input(ng-model="essay_id",type='hidden', class='form-control')/
                   input(ng-model="essay_title",type='hidden', class='form-control')/
+
               .form-group
-                label.col-sm-2.control-label comment:
-                .col-sm-10
-                  textarea(ng-model="comment_body", class="form-control", rows="3", id="comment_text_id")
+                .col-xs-2.col-sm-2.control-label
+                  label comment:
+                .col-xs-10.col-sm-10
+                  div(ng-model="comment_body", class="comment-div form-control", rows="3", id="comment_text_id" ui-tinymce)
               .form-group
                 .col-sm-12.text-right
                   button(type='submit',class='btn btn-default') submit comment
@@ -88,14 +111,24 @@ block content
                 .col-sm-12.text-center
                   .alert {{warning}}
 
-            div(ng-repeat='comment in essays.comments | reverse')
+
+          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2
+            div(ng-repeat='comment in essays.comments')
               .comment-div
-                .comment-author name: {{comment.name}}
-                .comment-date date: {{comment.updatedAt}}
-                pre.comment-text {{comment.comment}}
-                pre(ng-if="comment.response")
-                  span response
-                  .comment-text {{comment.response}}
+                .row.comment-header
+                  .col-xs-6.col-sm-6
+                    .comment-author name: {{comment.name}}
+                  .col-xs-6.col-sm-6
+                    .comment-date date: {{comment.updatedAt}}
+                .row
+                  .col-xs-2.col-sm-4 comment:
+                  .col-xs-10.col-sm-8
+                    div(class="comment-format" ng-bind-html="trust(comment.comment)")
+
+                div(class='row response-div', ng-if="comment.response")
+                  .col-xs-2.col-sm-4 response:
+                  .col-xs-10.col-sm-8
+                    div(class="response-format" ng-bind-html="trust(comment.response)")
 
 
 
@@ -107,7 +140,7 @@ block content
 
 
 
-
+        .bottom-buffer
   .bottom-buffer
 
 

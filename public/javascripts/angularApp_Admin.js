@@ -3,7 +3,7 @@
  */
 
 'use strict';
-var app = angular.module('simple_node_blog', [])
+var app = angular.module('simple_node_blog', ['ui.tinymce'])
 
 
 
@@ -17,7 +17,7 @@ var app = angular.module('simple_node_blog', [])
     })
 
 
-    .controller('MainCtrl', ['$scope', 'essays','comments', 'media', '$http',function ($scope, essays,comments, media,$http) {
+    .controller('MainCtrl', ['$scope', 'essays','comments', 'media', '$http','$sce',function ($scope, essays,comments, media,$http,$sce) {
 
 
         $scope.show_add_essay = true;
@@ -27,6 +27,8 @@ var app = angular.module('simple_node_blog', [])
         $scope.show_delete_essays = false;
         $scope.show_add_location = false;
         $scope.media = media.media;
+
+        $scope.trust = $sce.trustAsHtml;
 
         $scope.emptyAndResetDBs = function(){
             return $http.get('/admin/clear_dbs/').success(function (data) {
@@ -227,10 +229,12 @@ var app = angular.module('simple_node_blog', [])
 
 
 
-    .controller('DeleteEditEssaysCtrl', ['$scope','essays', '$location', '$anchorScroll', function ($scope,essays,$location, $anchorScroll) {
+    .controller('DeleteEditEssaysCtrl', ['$scope','essays', '$location', '$anchorScroll', '$sce',function ($scope,essays,$location, $anchorScroll,$sce) {
         $scope.essays = essays.essays;
         $scope.show_edit_form = false;
+
         $scope.edit_essay_index = undefined;
+        $scope.trust = $sce.trustAsHtml;
 
         $scope.submitEssayEdits = function(){
             if (
@@ -309,6 +313,7 @@ var app = angular.module('simple_node_blog', [])
 
         $scope.addEssayFormFunction = function () {
 
+            alert("click"+$scope.essay_text)
 
 
             if (
@@ -339,11 +344,11 @@ var app = angular.module('simple_node_blog', [])
 
     }])
 
-    .controller('ApproveCommentsCtrl', ['$scope', 'comments', function ($scope, comments) {
+    .controller('ApproveCommentsCtrl', ['$scope', 'comments', '$sce',function ($scope, comments,$sce) {
 
         $scope.comments = comments.comments;
         $scope.comment_respond_form_show = false;
-
+        $scope.trust = $sce.trustAsHtml;
         $scope.approveComment = function(id, index){
 
 

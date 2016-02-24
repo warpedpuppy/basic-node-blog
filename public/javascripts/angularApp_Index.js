@@ -3,21 +3,28 @@
  */
 
 'use strict';
-var app = angular.module('simple_node_blog', [])
+var app = angular.module('simple_node_blog', ['ui.tinymce'])
 
 
-    .controller('MainCtrl', ['$scope','essays',function($scope, essays){
+    .controller('MainCtrl', ['$scope','essays','$sce',function($scope, essays,$sce){
         $scope.essays = essays.essays;
 
+        $scope.trust = $sce.trustAsHtml;
         essays.getAll();
 
 
-    }])
+        $scope.tinymceOptions = {
 
-    .controller('CommentCtrl', ['$scope','essays', function($scope, essays){
-        $scope.essays = essays.essays;
+            menubar:false,
+            inline: false,
+            plugins : 'advlist autolink link image lists charmap print preview',
+            skin: 'lightgray',
+            theme : 'modern',
+            statusbar: false,
+            visible:false
 
-
+        }
+        $scope.comment = {};
 
         $scope.add_comment = function(){
 
@@ -25,7 +32,7 @@ var app = angular.module('simple_node_blog', [])
             $scope.essay_title = $scope.essays.essay.essay_title;
             $scope.warning = "";
 
-
+            //alert($scope.comment.comment_name+" "+$scope.comment.comment_body);
             if(
                 $scope.comment_body === undefined ||
                 $scope.comment_name === undefined ||
@@ -36,18 +43,21 @@ var app = angular.module('simple_node_blog', [])
                 $scope.warning = "please fill everything out";
                 return;
             }
+            else{
+                essays.addComment({
+                    comment_body: $scope.comment_body,
+                    name: $scope.comment_name,
+                    essay_id: $scope.essay_id,
+                    essay_title: $scope.essay_title
+                }).success(function(data) {
+                    $scope.warning ="";
+                    //$scope.essay.Comments.push({name:$scope.comment_name, comment:$scope.comment_body, updatedAt:data.updatedAt});
+                    $scope.comment_body = '';
+                    $scope.comment_name = '';
+                });
+            }
 
-            essays.addComment({
-                comment_body: $scope.comment_body,
-                name: $scope.comment_name,
-                essay_id: $scope.essay_id,
-                essay_title: $scope.essay_title
-            }).success(function(data) {
-                $scope.warning ="";
-                //$scope.essay.Comments.push({name:$scope.comment_name, comment:$scope.comment_body, updatedAt:data.updatedAt});
-                $scope.comment_body = '';
-                $scope.comment_name = '';
-            });
+
 
 
         };
@@ -55,11 +65,11 @@ var app = angular.module('simple_node_blog', [])
 
     }])
 
-    .filter('reverse', function() {
+    /*.filter('reverse', function() {
         return function(items) {
             return items.slice().reverse();
         };
-    })
+    })*/
     .factory('essays',['$http',function($http){
     var o = {
         essays: []
