@@ -2,10 +2,10 @@ doctype html
 html
   head
     title= title
-
-    link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+    //link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/less/custom.css')
-    script(src="//d3js.org/topojson.v0.min.js")
+
     script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
     // script(src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js")
     //script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js")
@@ -16,32 +16,33 @@ html
 
 
   body(ng-app="simple_node_blog")
-    nav.navbar.navbar-default.navbar-static-top
-      .container-fluid
-          .navbar-header
-              button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
-                  span(class="sr-only") Toggle navigation
-                  span(class="icon-bar")
-                  span(class="icon-bar")
-                  span(class="icon-bar")
+      .navbar.navbar-default.navbar-static-top(role='navigation')
+          .container
+              .navbar-header
+                  button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                      span.sr-only Toggle navigation
+                      span.icon-bar
+                      span.icon-bar
+                      span.icon-bar
 
-              a.navbar-brand ashlander
+                  a.navbar-brand(href='/') ashlander
 
-          .collapse.navbar-collapse#bs-example-navbar-collapse-1
-              ul.nav.navbar-nav.navbar-right
-                  li
-                      a(href='/') home
-                  li
-                      a(href='/essays') essays
-                  li
-                      a(href='/media') stuff about me
-                  li
-                      a(href='/about') about this site
-                  li
-                      a(href='/admin') admin
+              .navbar-collapse.collapse
+
+                  ul.nav.navbar-nav.navbar-right
+                      li
+                          a(href='/') home
+                      li
+                          a(href='/essays') essays
+                      li
+                          a(href='/media') media
+                      li
+                          a(href='/about') about this site
+                      li
+                          a(href='/admin') admin
     block content
 
 
   footer
       script(src='/bootstrap/js/bootstrap.min.js')
-                                    
+      script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")

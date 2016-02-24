@@ -17,18 +17,18 @@ block content
 
 
         .container(ng-controller='MainCtrl')
-          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2.essay-header
+         #essay-wrapper
+          .col-xs-12.col-sm-12.essay-header
             .col-xs-6.col-sm-6
               h2.essay-title {{essays.essay.essay_title}}
             .col-xs-6.col-sm-6.essay-date
               h3.essay-date {{essays.essay.updatedAt}}
 
-
-          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2
+          .col-xs-12.col-sm-12
               div(class="essay-format" ng-bind-html="trust(essays.essay.essay)")
 
 
-          .col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3
+          .col-xs-10.col-xs-offset-1.col-sm-10.col-sm-offset-1
               form(class='form-horizontal',ng-submit="add_comment()")
                 .form-group
                     .col-sm-12.text-center
@@ -52,20 +52,24 @@ block content
                     .col-sm-12.text-right
                         button(type='submit',class='btn btn-default') submit comment
 
-                .form-group
+                .form-group(ng-if="warning")
                     .col-sm-12.text-center
                         .alert {{warning}}
-          .col-xs-10.col-xs-offset-1.col-sm-8.col-sm-offset-2
-               h3 comments:
+          .col-xs-12.col-sm-12
+            hr
+
+          .col-xs-12.col-sm-12
+               h3(ng-if="essays.comments.length > 0") comments:
                div(ng-repeat='comment in essays.comments')
-                  .comment-div
+                   .row.comment-div
                       .row.comment-header
                           .col-xs-6.col-sm-6
                                 .comment-author name: {{comment.name}}
                           .col-xs-6.col-sm-6
                                 .comment-date date: {{comment.updatedAt}}
-                      .row
-                          .col-xs-2.col-sm-4 comment:
+                      .row.comment-body
+                          .col-xs-2.col-sm-4
+                              .comment-author comment:
                           .col-xs-10.col-sm-8
                               div(class="comment-format" ng-bind-html="trust(comment.comment)")
 

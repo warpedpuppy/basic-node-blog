@@ -23,13 +23,13 @@
             this.create_nodes = __bind(this.create_nodes, this);
             var max_amount;
             this.data = data;
-            this.width = 940;
-            this.height = 600;
-            this.tooltip = CustomTooltip("gates_tooltip", 240);
+            this.width = 650;
+            this.height = 400;
+            this.tooltip = CustomTooltip("asdf", 240);
             this.genre_array = [];
             this.center = {
                 x: this.width / 2,
-                y: this.height / 2
+                y: (this.height / 2)-70
             };
             this.genre_centers = {
                 "book": {
@@ -41,11 +41,11 @@
                     y: this.height / 2
                 },
                 "movie": {
-                    x: (this.width *.6)-50,
+                    x: (this.width *.6)-15,
                     y: this.height / 2
                 },
                 "music": {
-                    x: (this.width *.8),
+                    x: (this.width *.8)-15,
                     y: this.height / 2
                 }
             };
@@ -80,7 +80,7 @@
                     var node;
                     node = {
 
-                        radius: 50,//_this.radius_scale(parseInt(5000)),
+                        radius: 25,//_this.radius_scale(parseInt(5000)),
                         value: 5000,
                         name: d.title,
                         org: d.genre,
@@ -92,8 +92,8 @@
                         title: d.title,
                         genre: d.genre,
                         author: d.author,
-                        x: Math.random() * 900,
-                        y: Math.random() * 800
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height
                     };
 
                     ;
@@ -282,8 +282,8 @@
 
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 650 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
     var y = d3.scale.linear()
@@ -342,14 +342,14 @@
                     })]);
 
                     data = graph_array;
-                    console.log(data)
+
 
                     svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
                         .call(xAxis)
                         .append("text")
-                        .attr("x", 910)
+                        .attr("x", 600)
                         .attr("dx", "-.71em")
                         .attr("y", "-.5em")
                         .style("text-anchor", "end")
@@ -369,7 +369,7 @@
                         .attr("class", "bar")
                         .attr("fill", "red")
                         .attr("x", function (d) {
-                            return x(d.genre) + 70;
+                            return x(d.genre) + 35;
                         })
                         .attr("width", x.rangeBand() / 2)
                         .attr("y", function (d) {

@@ -57,7 +57,7 @@ var app = angular.module('simple_node_blog', [])
 
             return $http.get('/media/get_media_created').success(function (data) {
 
-                console.log("media created = "+data)
+                //console.log("media created = "+data)
                 angular.copy(data, o.media_created);
             });
 

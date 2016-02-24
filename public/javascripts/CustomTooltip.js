@@ -1,6 +1,8 @@
 function CustomTooltip(tooltipId, width){
+
+
 	var tooltipId = tooltipId;
-	$("body").append("<div class='tooltip' id='"+tooltipId+"'></div>");
+	$("body").prepend("<div class='tooltip' id='"+tooltipId+"'></div>");
 	
 	if(width){
 		$("#"+tooltipId).css("width", width);
@@ -9,9 +11,10 @@ function CustomTooltip(tooltipId, width){
 	hideTooltip();
 	
 	function showTooltip(content, event){
+
 		$("#"+tooltipId).html(content);
 		$("#"+tooltipId).show();
-		
+
 		updatePosition(event);
 	}
 	
@@ -37,7 +40,9 @@ function CustomTooltip(tooltipId, width){
 		 var tttop = ((curY - wscrY + yOffset*2 + tth) > $(window).height()) ? curY - tth - yOffset*2 : curY + yOffset;
 		 if (tttop < wscrY + yOffset){
 		 	tttop = curY + yOffset;
-		 } 
+		 }
+
+
 		 $(ttid).css('top', tttop + 'px').css('left', ttleft + 'px');
 	}
 	

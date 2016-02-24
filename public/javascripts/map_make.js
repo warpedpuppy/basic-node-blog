@@ -3,11 +3,12 @@
  */
 (function(){
     d3.json("/media/get_map_data", function(json) {
-    var width = 900;
-    var height = 600;
+    var width = 960;
+    var height = 960;
 
 
     var projection = d3.geo.mercator();//albers();<-- this is just america//
+        projection.scale([85])
 
 
     var svg = d3.select("#map_div").append("svg")
