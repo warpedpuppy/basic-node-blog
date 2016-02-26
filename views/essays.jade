@@ -5,18 +5,17 @@ block content
       script(type="text/javascript" src="/bower_components/tinymce-dist/tinymce.js")
       script(type="text/javascript" src="/bower_components/angular-ui-tinymce/src/tinymce.js")
       script(src="/javascripts/angularApp_Essays.js")
-      script.
-        tinymce.init({
-          selector:'div.comment-div',
-          menubar: false,
-          statusbar: false,
-          toolbar:false
-        })
+
 
 
       div(ng-controller="MainCtrl")
-        .container(ng-hide="show_one")
+        .container(ng-hide="show_one", ng-class="{fade: !show_one, default: show_one}")
           .row
+
+            .text-center
+
+
+
             .text-center
               ul(class="pagination pagination-sm")
 
@@ -60,15 +59,15 @@ block content
             .text-center.col-xs-10.col-xs-offset-1.col-sm-10.col-sm-offset-1
 
               ol.list-group
-                li(class='essay list-group-item',ng-repeat='essay in essays.essays')
+                li(class='essay list-group-item',ng-repeat='essay in essays.essays',ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}")
 
                   a(ng-click='fetch_essay($index)') {{essay.essay_title}} created on {{essay.createdAt}}
 
 
 
 
-
-        .container(ng-show="show_one")
+          //,ng-show='show_one',ng-class="{fade: show_one}"
+        .container(class="default" ng-class="{fade: show_one}")
           #essay-wrapper
             .col-xs-12.col-sm-12.text-right
               button(type="button",class="btn btn-info-outline" ng-click='switch_to_list()') return to essay list
@@ -103,7 +102,7 @@ block content
                   .col-xs-2.col-sm-2.control-label
                     label comment:
                   .col-xs-10.col-sm-10
-                    div(ng-model="comment_body", class="comment-div form-control", rows="3", id="comment_text_id" ui-tinymce)
+                    div(ng-model="comment_body", class="comment-div form-control", rows="3",ui-tinymce="tinymceOptions")
                 .form-group
                   .col-sm-12.text-right
                     button(type='submit',class='btn btn-default') submit comment

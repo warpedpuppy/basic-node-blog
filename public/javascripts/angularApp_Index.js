@@ -15,13 +15,10 @@ var app = angular.module('simple_node_blog', ['ui.tinymce'])
 
         $scope.tinymceOptions = {
 
-            menubar:false,
-            inline: false,
-            plugins : 'advlist autolink link image lists charmap print preview',
-            skin: 'lightgray',
-            theme : 'modern',
+            selector:'div.comment-div',
+            menubar: false,
             statusbar: false,
-            visible:false
+            toolbar:false
 
         }
         $scope.comment = {};
@@ -78,6 +75,7 @@ var app = angular.module('simple_node_blog', ['ui.tinymce'])
     o.getAll = function() {
 
         return $http.get('/get_essay').success(function(data){
+           // alert(data.date)
             angular.copy(data, o.essays);
         });
     };

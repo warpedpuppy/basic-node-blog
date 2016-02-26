@@ -3,7 +3,7 @@
  */
 
 'use strict';
-var app = angular.module('simple_node_blog', ['ui.tinymce'])
+var app = angular.module('simple_node_blog', ['ui.tinymce','ngAnimate'])
 
 
 
@@ -78,12 +78,12 @@ var app = angular.module('simple_node_blog', ['ui.tinymce'])
 
         $scope.fetch_essay = function (index) {
             var id = $scope.essays.essays[index].id;
-            //console.log(id);
+
             essays.fetch_essay(id).success(function (data) {
-                //$scope.button_data_array = essays.button_data_array;
-                console.log("show one = " + data.show_one)
+
+
                 $scope.show_one = data.show_one;
-                console.log("show one = " + $scope.show_one)
+
 
             })
         }
@@ -97,7 +97,14 @@ var app = angular.module('simple_node_blog', ['ui.tinymce'])
 
         $scope.essays = essays.essays;
         $scope.trust = $sce.trustAsHtml;
+        $scope.tinymceOptions = {
 
+            selector:'div.comment-div',
+            menubar: false,
+            statusbar: false,
+            toolbar:false
+
+        }
         $scope.add_comment = function () {
 
             console.log("comment body = " + $scope.comment_body)

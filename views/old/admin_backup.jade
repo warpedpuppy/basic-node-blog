@@ -1,0 +1,171 @@
+extends ../layout
+
+block content
+
+  script(src="/javascripts/angularApp_Admin.js")
+
+  .container
+    .row
+      .text-right
+        a(href='/admin/logout')
+          button.btn.btn-danger log out
+      ul.nav.nav-tabs
+        li.active
+          a(href="/admin/enter_essay", aria-controls='essay', role='tab', data-toggle='tab') enter essay
+        li
+          a(href="/admin/enter_media", aria-controls='media', role='tab', data-toggle='tab') enter media
+        li
+          a(href="/admin/approve_comments", aria-controls='comments', role='tab', data-toggle='tab') comments awaiting approval
+        li
+          a(href="/admin/manage_media", aria-controls='media', role='tab', data-toggle='tab') manage media
+        li
+          a(href="/admin/delete_essays", aria-controls='deleteEditEssay', role='tab', data-toggle='tab') delete/edit essays
+
+
+
+
+    //.tab-content
+
+    .container
+      .row
+        ui-view
+
+    script(type="text/ng-template" id="/admin/enter_essayx.html")
+
+
+            //div(role='tabpanel', class='tab-pane active', id='essay')
+          h1 enter essay
+
+
+          form(action='/admin/add_essay', method='post',  class='form-horizontal enter-media-form', id="enter_essay_form")
+            .form-group
+              label.col-sm-2.control-label title:
+              .col-sm-10
+                input(type='text', class='form-control', name='title', id='essay_title_text', placeholder='title')/
+            .form-group
+              label.col-sm-2.control-label essay:
+              .col-sm-10
+                textarea(name='essay', class="form-control", rows="3", id="essay_text")
+            .form-group
+              .col-sm-12.text-right
+                button(onclick="return false;",class='btn btn-default', id="enter_essay_button") enter essay
+                //input(type='submit',class='btn btn-default', value='enter essay')/
+
+
+
+
+
+    script(type="text/ng-template" id="/admin/enter_media.html")
+                  //div(role='tabpanel', class='tab-pane', id='media')
+                h1 enter media
+
+                form(action='/admin/add_media', method='post',  class='form-horizontal enter-media-form', id="add_media_form")
+                  .form-group
+                    label.col-sm-2.control-label title:
+                    .col-sm-10
+                      input(type='text', class='form-control', name='title', id='title_text', placeholder='title')/
+
+
+                  .form-group
+                    label.col-sm-2.control-label author:
+                    .col-sm-10
+                      input(type='text', class='form-control', name='author', id='author_text', placeholder='author')/
+
+                  .form-group
+                    label.col-sm-2.control-label genre:
+                    .col-sm-10
+                      select(class='form-control' id='genre_select', name='genre_select')
+                        option(value='television') television
+                        option(value='book') book
+                        option(value='movie') movie
+
+
+                  .form-group
+                    .col-sm-12.text-right
+                      button(onclick="return false;",class='btn btn-default', id="enter_media_button") enter media button
+                      //input(type='submit',class='btn btn-default', value='enter media')/
+
+                h1.alert
+
+
+      script(type="text/ng-template" id="/approve_comments.html")
+                //div(role='tabpanel', class='tab-pane', id='comments')
+
+              h1 comments awaiting approval
+              table.table.table-striped.data-table
+                thead
+                  tr
+                    th essay title
+                    th commenter
+                    th comment
+                    th approve?
+                tbody#table_body
+                  -for(var i=0; i < comments.length; i++)
+                    tr
+                      td #{comments[i].essay_title}
+                      td #{comments[i].name}
+                      td #{comments[i].comment}
+                      td
+                        a(href='/admin/approve_comment/#{comments[i].id}')
+                          button.btn.btn-success approve
+                        a(href='/admin/delete_comment/#{comments[i].id}')
+                          button.btn.btn-danger delete
+
+
+      script(type="text/ng-template" id="/manage_media.html")
+                //div(role='tabpanel', class='tab-pane', id='media')
+
+
+              h1 media entered
+
+              table.table.table-striped.data-table
+                thead
+                  tr
+                    th title
+                    th author
+                    th genre
+                    th delete record
+                tbody#table_body
+                  -for(var i=0; i < media_object.length; i++)
+                    tr
+                      td #{media_object[i].title}
+                      td #{media_object[i].author}
+                      td #{media_object[i].genre}
+                      td
+                        a(href='/admin/delete_record/#{media_object[i].id}', id='confirm_#{media_object[i].id}', style='display:none')
+                          button(class='btn btn-danger', id='#{media_object[i].id}', name='#{media_object[i].title}') confirm deletion
+
+                        button(class='btn btn-warning cancel-delete', id='cancel_#{media_object[i].id}', name='#{media_object[i].id}',style='display:none') cancel deletion
+
+                        button(class='btn btn-danger delete-record', id='delete_#{media_object[i].id}', name='#{media_object[i].id}') delete this record
+
+
+      script(type="text/ng-template" id="/delete_essays.html")
+                    //div(role='tabpanel', class='tab-pane', id='deleteEditEssay')
+
+              table.table.table-striped
+                thead
+                  tr
+                    th id
+                    th title
+                    th edit
+                    th delete
+                tbody#table_body
+                  -for(var i=0; i < essays.length; i++)
+                    tr
+                      td= essays[i].id
+                      td= essays[i].title
+                      td
+                        a(href='admin/edit_essay/#{essays[i].id}')
+                          button.btn.btn-warning edit
+                      td
+                        a(href='admin/delete_essay/#{essays[i].id}')
+                          button.btn.btn-danger delete
+
+
+
+
+
+
+
+

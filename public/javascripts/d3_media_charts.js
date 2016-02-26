@@ -349,7 +349,7 @@
                         .attr("transform", "translate(0," + height + ")")
                         .call(xAxis)
                         .append("text")
-                        .attr("x", 600)
+                        .attr("x", 610)
                         .attr("dx", "-.71em")
                         .attr("y", "-.5em")
                         .style("text-anchor", "end")

@@ -63,11 +63,12 @@ block content
 
         div(ng-show='show_add_media',ng-controller="AddMediaCtrl")
 
-              ul.pagination
-                li(ng-class="{active: media_consumed_show}")
-                  a(ng-click='show_media(1)') media consumed
-                li(ng-class="{active: !media_consumed_show}")
-                  a(ng-click='show_media(2)') media created
+              .text-center
+                ul.pagination
+                  li(ng-class="{active: media_consumed_show}")
+                    a(ng-click='show_media(1)') media consumed
+                  li(ng-class="{active: !media_consumed_show}")
+                    a(ng-click='show_media(2)') media created
 
               div(id='media_consumed', ng-show='media_consumed_show')
                   h1 enter media consumed
@@ -128,7 +129,14 @@ block content
 
         div(ng-show='show_approve_comments',ng-controller="ApproveCommentsCtrl")
 
-              form(ng-show='comment_respond_form_show',ng-submit="submitCommentResponse()", class='form-horizontal enter-media-form')
+              form(class='top-buffer',ng-show='comment_respond_form_show',ng-submit="submitCommentResponse()", class='form-horizontal enter-media-form')
+
+                .form-group
+                  .col-sm-6.col-md-6
+                    h3 respond to comment
+                  .col-sm-6.col-md-6.text-right
+                    button(class='btn btn-btn-default', ng-click='comment_respond_form_show = !comment_respond_form_show') return to comment list
+
                 .form-group
                   .col-sm-2.control-label
                     label commenter:
@@ -152,10 +160,13 @@ block content
                     input(type='submit', class='btn btn-default', value='approve comment and response')/
 
 
-              h1 comments awaiting approval
+
               table(class='table table-striped data-table', ng-hide='comment_respond_form_show')
                 thead
                   tr
+                    th(colspan='4')
+                      h3 comments awaiting approval
+                 tr
                     th essay title
                     th commenter
                     th comment
@@ -177,11 +188,12 @@ block content
 
         div(ng-show='show_edit_media',ng-controller="ManageMediaCtrl")
 
-              ol.pagination
-                li(ng-class="{active: show_delete_media_consumed}")
-                  a(ng-click='deleteMedia(1)') media consumed
-                li(ng-class="{active: !show_delete_media_consumed}")
-                  a(ng-click='deleteMedia(2)') media created
+              .text-center
+                ol.pagination
+                  li(ng-class="{active: show_delete_media_consumed}")
+                    a(ng-click='deleteMedia(1)') media consumed
+                  li(ng-class="{active: !show_delete_media_consumed}")
+                    a(ng-click='deleteMedia(2)') media created
 
               div(ng-show='show_delete_media_consumed')
                 h1 delete media consumed
@@ -230,6 +242,8 @@ block content
 
 
               form(ng-show='show_edit_form',ng-submit="submitEssayEdits()", class='form-horizontal enter-media-form')
+                .form-group.text-right
+                  button(class='btn btn-info', ng-click='show_edit_form = !show_edit_form') back to essay list
                 .form-group
                   label.col-sm-2.control-label title:
                   .col-sm-10
@@ -240,7 +254,7 @@ block content
                   .col-sm-10
                     //textarea(name='essay', class="form-control", rows="30", ng-model='essays.edit_essay.essay')ng-bind-html="trust(essays.edit_essay.essay)"
                     textarea(name='essay',class="form-control essay-format",rows="30",  ng-model='essays.edit_essay.essay' ui-tinymce)
-                    h1(ng-bind='warning2')
+                    h1 {{warning2}}
                 .form-group
                   .col-sm-12.text-right
                     input(type='submit', class='btn btn-default', value='submit edits')/
@@ -267,12 +281,12 @@ block content
 
 
         div(ng-show='show_add_location', ng-controller="AddLocationCtrl")
-
-          ol.pagination
-            li(ng-class="{active: add_location_show}")
-              a(ng-click='showLocation(1)') add location
-            li(ng-class="{active: !add_location_show}")
-              a(ng-click='showLocation(2)') delete location
+          .text-center
+            ol.pagination
+              li(ng-class="{active: add_location_show}")
+                a(ng-click='showLocation(1)') add location
+              li(ng-class="{active: !add_location_show}")
+                a(ng-click='showLocation(2)') delete location
 
           div(ng-show="add_location_show")
             h1 add location
